@@ -103,7 +103,7 @@ export default function Pricing({
               Pricing Plans
             </h1>
             <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-              Generate one cover letter free, then choose a account plan to go cotinue gecovering. Account
+              Generate one cover letter free, then choose a plan to go cotinue gecovering. Account
               plans unlock additional features.
             </p>
             <div className="relative flex self-center mt-12 border rounded-lg bg-zinc-900 border-zinc-800">
@@ -170,7 +170,7 @@ export default function Pricing({
             Pricing Plans
           </h1>
           <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-            Generate one cover letter free, then choose a account plan to go cotinue gecovering. Account
+            Generate one cover letter free, then choose a plan to go cotinue gecovering. Account
             plans unlock additional features.
           </p>
           <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
@@ -263,7 +263,7 @@ function LogoCloud() {
   return (
     <div>
       <p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
-        Brought to you by
+        Built with
       </p>
       <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
         <div className="flex items-center justify-start">
