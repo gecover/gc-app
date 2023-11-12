@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     page: {
       flexDirection: 'column',
       backgroundColor: '#fff',
-      fontFamily: 'Helvetica', // Change to 'OpenSans' or your preferred font if registered above
+      fontFamily: 'Helvetica',
     },
     section: {
       margin: 10,
