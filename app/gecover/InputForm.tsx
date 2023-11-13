@@ -4,6 +4,9 @@ import FileDrop from '../../components/ui/FileDrop';
 import PDFDocument from '../../components/ui/PDF/PDFDocument';
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
@@ -15,8 +18,9 @@ interface Props {
 
 const LoadingOverlay = () => (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="text-white">Loading...</div>
-      {/* TODO - Replace the above with a spinner or loading animation */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress />
+      </Box>
     </div>
 );
 
@@ -118,8 +122,8 @@ export default function InputForm({ session }: Props) {
 
 
       setUrlData(urlList.data);
-      setJobName(urlList.data.job_title);
-      setCompanyName(urlList.data.company);
+      setJobName(urlList.data.job_title.trim());
+      setCompanyName(urlList.data.company.trim());
     } catch (error) {
       console.error('Error fetching URL:', error);
     }
