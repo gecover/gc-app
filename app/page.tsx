@@ -12,6 +12,8 @@ export default async function PricingPage() {
     getSubscription()
   ]);
 
+  
+
   return (
     <Landing />
   );

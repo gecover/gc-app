@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Landing() {
     return (
         <div className="min-h-screen">
@@ -5,12 +7,15 @@ export default function Landing() {
           <section className="text-center p-20">
             <h2 className="text-2xl mb-6">Tired of writing cover letters?</h2>
             <h2 className="text-5xl font-bold mb-6"> Generate with GeCover - fast.</h2>
-            <button
-                className="middle mt-8 none center rounded-md bg-pink-500 py-3 px-6 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/50 hover:scale-1.10 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                data-ripple-light="true"
-                >
-                instant custom cover letters
-            </button>
+            <Link href={'/tools'}>
+              <button
+                  className="middle mt-8 none center rounded-md bg-pink-500 py-3 px-6 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/50 hover:scale-1.10 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  data-ripple-light="true"
+                  >
+                  instant custom cover letters
+              </button>
+            </Link>
+            
           </section>
           
           <section id="features" className="container mx-auto p-8">
