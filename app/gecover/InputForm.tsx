@@ -6,6 +6,7 @@ import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Snackbar,  { SnackbarProps }  from '@mui/joy/Snackbar';
 
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -19,7 +20,7 @@ interface Props {
 const LoadingOverlay = () => (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgress />
+        <CircularProgress sx={{color: "pink"}}/>
       </Box>
     </div>
 );
@@ -37,10 +38,14 @@ export default function InputForm({ session }: Props) {
   const [paragraph, setParagraph] = useState<string>('');
   const [jobName, setJobName] = useState<string>('');
   const [companyName, setCompanyName] = useState<string>('');
+  const [open, setOpen] = React.useState(false);
+  const [color, setColor] = React.useState<SnackbarProps['color']>('primary');
+  const [banner, setBanner] = React.useState('');
 
   const [resumeData, setResumeData] = useState<ResponseContent>({ contents: [] });
   const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
 
+  
   const [paragraphB, setParagraphB] = useState<string>('');
 
   
@@ -61,8 +66,20 @@ export default function InputForm({ session }: Props) {
             'Authorization' : `Bearer ${session.access_token}`
           },
         });
-        setResumeData(resumeList.data);
-        console.log(resumeList.data);
+        const length = resumeList.data.contents.length;
+        if (length > 5){
+          setResumeData(resumeList.data);
+          setOpen(true);
+          setColor('success');
+          setBanner(`You loaded a pdf with ${length} chunks.`)
+        } else {
+          setResumeData(resumeList.data);
+          setOpen(true);
+          setColor('danger');
+          setBanner(`You loaded a pdf with ${length} chunks. Parsing did not work well, and you likely will not get good results.`)
+        }
+        
+        // console.log(resumeList.data);
       } catch (error) {
         console.error('Error uploading file:', error);
       } 
@@ -87,6 +104,16 @@ export default function InputForm({ session }: Props) {
         {headers: {
         'Authorization' : `Bearer ${session.access_token}`
       }});
+
+      if (!urlList.data.contents) {
+        setOpen(true);
+        setColor('danger');
+        setBanner(`We didn't get your job requirements. Please note we only support LinkedIn from the direct job page currently.`)
+      } else {
+        setOpen(true);
+        setColor('success');
+        setBanner(`Successfully loaded ${urlList.data.contents.length} job requirements.`)
+      }
 
        if (resumeData && urlData) {
         try {
@@ -133,6 +160,8 @@ export default function InputForm({ session }: Props) {
     <>
     {isLoading && <LoadingOverlay />}
     <section className="bg-black">
+      <Snackbar color={color} open={open} autoHideDuration={1000} > {banner} </Snackbar>
+
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center">
                 <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
