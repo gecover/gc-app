@@ -95,10 +95,10 @@ export default function InputForm({ session }: Props) {
             // TODO - FIX CANCEL TOKEN
             source.cancel('Request was cancelled by the user.');
             console.log(generatedParagraphs.data);
-            //console.log('FIORST PARA', generatedParagraphs.data.first_para[1])
+            //console.log('FIORST PARA', generatedParagraphs.data.para_A)
             //console.log('SECOND PARA', generatedParagraphs.data.second_para[1])
-            setEducationParagraph(generatedParagraphs.data.first_para[1]);
-            setExperienceParagraph(generatedParagraphs.data.second_para[1]);
+            //setEducationParagraph(generatedParagraphs.data.para_A);
+            setExperienceParagraph(generatedParagraphs.data.para_A);
         } catch (error) {
             console.error('Error generating paragraphs:', error);
         } finally {
@@ -164,11 +164,13 @@ export default function InputForm({ session }: Props) {
                                 </Button>
                             </div>
                             <div>
-                            {educationParagraph && experienceParagraph && (
+                            {experienceParagraph && (
                               <PDFDownloadLink
                                 document={
                                   <PDFDocument 
-                                    educationParagraph={educationParagraph} 
+                                  position={"null"}
+                                  companyName={"null"}
+                                  educationParagraph={"null"}
                                     experienceParagraph={experienceParagraph} 
                                   />
                                 }

@@ -97,8 +97,8 @@ interface PDFDocumentProps {
   const PDFDocument: React.FC<PDFDocumentProps> = ({
     educationParagraph,
     experienceParagraph,
-    position="POSITION A", // ADD POSITION, COMPANY, AND INDIVIDUAL NAME ENDPOINTS
-    companyName="COMPANY A",
+    position, // ADD POSITION, COMPANY, AND INDIVIDUAL NAME ENDPOINTS
+    companyName,
   }) => {
     const randomIntro: string = introSet[Math.floor(Math.random() * introSet.length)].replace('[Company Name]', companyName);
     const randomClosing: string = closingSet[Math.floor(Math.random() * closingSet.length)];
@@ -106,28 +106,14 @@ interface PDFDocumentProps {
     return (
       <Document>
         <Page size="A4" style={styles.page}>
-          <View style={styles.section}>
-            <Text style={styles.content}>{randomIntro}</Text>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.content}>I am applying for the {position} position at {companyName}.</Text>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.content}>{educationParagraph}</Text>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.content}>{experienceParagraph}</Text>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.content}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text>
-          </View>
-          <View style={styles.signature}>
-            <Text>{randomClosing}</Text>
-          </View>
-          <View style={styles.footer}>
-            <Text>Your Name</Text>
-            <Text>Your Contact Information</Text>
-          </View>
+          <Text style={styles.content}>{randomIntro}</Text>
+          <Text style={styles.content}> I am applying for the {position} position at {companyName}.</Text>
+          <Text style={styles.content}>{educationParagraph}</Text>
+          <Text style={styles.content}>{experienceParagraph}</Text>
+          <Text style={styles.content}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text>
+          <Text>{randomClosing}</Text>
+          <Text>Your Name</Text>
+          <Text>Your Contact Information</Text>
         </Page>
       </Document>
     );
