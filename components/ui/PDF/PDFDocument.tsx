@@ -88,15 +88,13 @@ const closingSet: string[] = [
 ];
 
 interface PDFDocumentProps {
-    educationParagraph: string;
-    experienceParagraph: string;
+    bodyParagraph: string;
     position: string; 
     companyName: string; 
   }
   
   const PDFDocument: React.FC<PDFDocumentProps> = ({
-    educationParagraph,
-    experienceParagraph,
+    bodyParagraph,
     position="POSITION A", // ADD POSITION, COMPANY, AND INDIVIDUAL NAME ENDPOINTS
     companyName="COMPANY A",
   }) => {
@@ -113,10 +111,7 @@ interface PDFDocumentProps {
             <Text style={styles.content}>I am applying for the {position} position at {companyName}.</Text>
           </View>
           <View style={styles.section}>
-            <Text style={styles.content}>{educationParagraph}</Text>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.content}>{experienceParagraph}</Text>
+            <Text style={styles.content}>{bodyParagraph}</Text>
           </View>
           <View style={styles.section}>
             <Text style={styles.content}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text>
