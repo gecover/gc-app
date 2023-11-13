@@ -51,9 +51,10 @@ export default function InputForm({ session }: Props) {
       formData.append('type', 'application/pdf');
 
       try {
-        resumeList = await axios.post('http://localhost:5000/read_pdf/', formData, {
+        resumeList = await axios.post(`${process.env.API_URL}/read_pdf/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${session.access_token}`
           },
         });
         setResumeData(resumeList.data);
@@ -76,29 +77,27 @@ export default function InputForm({ session }: Props) {
 
     let urlList = null;
 
-    if (url) {
-      try {
-        urlList = await axios.post('http://localhost:5000/extract_url/', { url });
-        console.log(urlList.data);
-        setUrlData(urlList.data);
-        setJobName(urlList.data.job_title);
-        setCompanyName(urlList.data.company);
-      } catch (error) {
-        console.error('Error fetching URL:', error);
-      }
-    }
-    
-    if (resumeData && urlData) {
+    try {
+      urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
+        { url },
+        {headers: {
+        'Authorization' : `Bearer ${session.access_token}`
+      }});
+
+       if (resumeData && urlData) {
         try {
             // Create a cancel token source
             const CancelToken = axios.CancelToken;
             const source = CancelToken.source();
-            const generatedParagraphs = await axios.post('http://localhost:5000/generate_paragraphs/', {
-            requirements: urlData.contents,
+            const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
+            requirements: urlList.data.contents,
             resume_documents: resumeData.contents, 
             }, {
                 cancelToken: source.token,
-                timeout: TIMEOUT_DURATION 
+                timeout: TIMEOUT_DURATION,
+                headers: {
+                  'Authorization' : `Bearer ${session.access_token}`
+                }
             });
             // TODO - FIX CANCEL TOKEN
             source.cancel('Request was cancelled by the user.');
@@ -106,7 +105,6 @@ export default function InputForm({ session }: Props) {
             // console.log('FIORST PARA', generatedParagraphs.data.first_para)
             // console.log('SECOND PARA', generatedParagraphs.data.second_para)
             setParagraph(generatedParagraphs.data.para_A);
-            //setParagraphB(generatedParagraphs.data.second_para);
         } catch (error) {
             console.error('Error generating paragraphs:', error);
         } finally {
@@ -117,6 +115,14 @@ export default function InputForm({ session }: Props) {
         setIsLoading(false);
         // TODO - IMPLEMENT ERROR HANDLING THROUGH WARNING COMPONENT PROVIDING INFO: RESUME INSUFFICIENT? URL UNPROCESSABLE?
       }
+
+
+      setUrlData(urlList.data);
+      setJobName(urlList.data.job_title);
+      setCompanyName(urlList.data.company);
+    } catch (error) {
+      console.error('Error fetching URL:', error);
+    }
   };
 
   return (
