@@ -20,6 +20,9 @@ const LoadingOverlay = () => (
     </div>
 );
   
+type ResumeContent = {
+  contents: string[];
+};
 
 export default function InputForm({ session }: Props) {
   const [file, setFile] = useState<File | null>(null);
@@ -30,16 +33,30 @@ export default function InputForm({ session }: Props) {
   const [paragraph, setParagraph] = useState<string>('');
   const [paragraphB, setParagraphB] = useState<string>('');
 
-
-//   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-//     if (event.target.files) {
-//       //setFile(event.target.files[0]);
-//       console.log('FILE RECEIVED');
-//     }
-//   };
-  const handleFileChange = (file: File) => {
+  const [resumeData, setResumeData] = useState<ResumeContent>({ contents: [] });
+  
+  const handleFileChange = async (file: File) => {
     setFile(file);
     console.log('FILE RECEIVED', file);
+    let resumeList = null;
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'application/pdf');
+
+      try {
+        resumeList = await axios.post('http://localhost:5000/read_pdf/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setResumeData(resumeList.data);
+        console.log(resumeList.data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      } 
+    }
   };
 
   const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -52,25 +69,7 @@ export default function InputForm({ session }: Props) {
     const TIMEOUT_DURATION = 200000;
     setIsLoading(true);
 
-    let resumeList = null;
     let urlList = null;
-  
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'application/pdf');
-
-      try {
-        resumeList = await axios.post('http://localhost:5000/read_pdf/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log(resumeList.data);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      } 
-    }
 
     if (url) {
       try {
@@ -81,14 +80,14 @@ export default function InputForm({ session }: Props) {
       }
     }
     
-    if (resumeList && resumeList.data.contents && urlList && urlList.data.contents) {
+    if (resumeData && urlList && urlList.data.contents) {
         try {
             // Create a cancel token source
             const CancelToken = axios.CancelToken;
             const source = CancelToken.source();
             const generatedParagraphs = await axios.post('http://localhost:5000/generate_paragraphs/', {
             requirements: urlList.data.contents,
-            resume_documents: resumeList.data.contents, 
+            resume_documents: resumeData.contents, 
             }, {
                 cancelToken: source.token,
                 timeout: TIMEOUT_DURATION 
