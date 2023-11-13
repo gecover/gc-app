@@ -20,6 +20,9 @@ const LoadingOverlay = () => (
     </div>
 );
   
+type ResumeContent = {
+  contents: string[];
+};
 
 export default function InputForm({ session }: Props) {
   const [file, setFile] = useState<File | null>(null);
@@ -27,33 +30,16 @@ export default function InputForm({ session }: Props) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [educationParagraph, setEducationParagraph] = useState<string>('');
-  const [experienceParagraph, setExperienceParagraph] = useState<string>('');
+  const [paragraph, setParagraph] = useState<string>('');
+  const [paragraphB, setParagraphB] = useState<string>('');
 
-
-//   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-//     if (event.target.files) {
-//       //setFile(event.target.files[0]);
-//       console.log('FILE RECEIVED');
-//     }
-//   };
-  const handleFileChange = (file: File) => {
+  const [resumeData, setResumeData] = useState<ResumeContent>({ contents: [] });
+  
+  const handleFileChange = async (file: File) => {
     setFile(file);
     console.log('FILE RECEIVED', file);
-  };
-
-  const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUrl(event.target.value);
-  };
-
-  const handleSubmit = async () => {
-
-    const TIMEOUT_DURATION = 200000;
-    setIsLoading(true);
-
     let resumeList = null;
-    let urlList = null;
-  
+
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
@@ -65,11 +51,25 @@ export default function InputForm({ session }: Props) {
             'Content-Type': 'multipart/form-data',
           },
         });
+        setResumeData(resumeList.data);
         console.log(resumeList.data);
       } catch (error) {
         console.error('Error uploading file:', error);
       } 
     }
+  };
+
+  const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUrl(event.target.value);
+    console.log('URL RECIVED', url);
+  };
+
+  const handleSubmit = async () => {
+
+    const TIMEOUT_DURATION = 200000;
+    setIsLoading(true);
+
+    let urlList = null;
 
     if (url) {
       try {
@@ -80,14 +80,14 @@ export default function InputForm({ session }: Props) {
       }
     }
     
-    if (resumeList && resumeList.data.contents && urlList && urlList.data.contents) {
+    if (resumeData && urlList && urlList.data.contents) {
         try {
             // Create a cancel token source
             const CancelToken = axios.CancelToken;
             const source = CancelToken.source();
             const generatedParagraphs = await axios.post('http://localhost:5000/generate_paragraphs/', {
             requirements: urlList.data.contents,
-            resume_documents: resumeList.data.contents, 
+            resume_documents: resumeData.contents, 
             }, {
                 cancelToken: source.token,
                 timeout: TIMEOUT_DURATION 
@@ -95,10 +95,10 @@ export default function InputForm({ session }: Props) {
             // TODO - FIX CANCEL TOKEN
             source.cancel('Request was cancelled by the user.');
             console.log(generatedParagraphs.data);
-            //console.log('FIORST PARA', generatedParagraphs.data.para_A)
-            //console.log('SECOND PARA', generatedParagraphs.data.second_para[1])
-            //setEducationParagraph(generatedParagraphs.data.para_A);
-            setExperienceParagraph(generatedParagraphs.data.para_A);
+            // console.log('FIORST PARA', generatedParagraphs.data.first_para)
+            // console.log('SECOND PARA', generatedParagraphs.data.second_para)
+            setParagraph(generatedParagraphs.data.para_A);
+            //setParagraphB(generatedParagraphs.data.second_para);
         } catch (error) {
             console.error('Error generating paragraphs:', error);
         } finally {
@@ -164,14 +164,13 @@ export default function InputForm({ session }: Props) {
                                 </Button>
                             </div>
                             <div>
-                            {experienceParagraph && (
+                            {paragraph && (
                               <PDFDownloadLink
                                 document={
                                   <PDFDocument 
-                                  position={"null"}
-                                  companyName={"null"}
-                                  educationParagraph={"null"}
-                                    experienceParagraph={experienceParagraph} 
+                                    bodyParagraph={paragraph}
+                                    position={''} 
+                                    companyName={''}                                  
                                   />
                                 }
                                 fileName="your-gecover.pdf"
