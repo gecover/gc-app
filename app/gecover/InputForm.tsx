@@ -27,8 +27,8 @@ export default function InputForm({ session }: Props) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [educationParagraph, setEducationParagraph] = useState<string>('');
-  const [experienceParagraph, setExperienceParagraph] = useState<string>('');
+  const [paragraph, setParagraph] = useState<string>('');
+  const [paragraphB, setParagraphB] = useState<string>('');
 
 
 //   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +44,7 @@ export default function InputForm({ session }: Props) {
 
   const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
+    console.log('URL RECIVED', url);
   };
 
   const handleSubmit = async () => {
@@ -95,10 +96,10 @@ export default function InputForm({ session }: Props) {
             // TODO - FIX CANCEL TOKEN
             source.cancel('Request was cancelled by the user.');
             console.log(generatedParagraphs.data);
-            //console.log('FIORST PARA', generatedParagraphs.data.first_para[1])
-            //console.log('SECOND PARA', generatedParagraphs.data.second_para[1])
-            setEducationParagraph(generatedParagraphs.data.first_para[1]);
-            setExperienceParagraph(generatedParagraphs.data.second_para[1]);
+            // console.log('FIORST PARA', generatedParagraphs.data.first_para)
+            // console.log('SECOND PARA', generatedParagraphs.data.second_para)
+            setParagraph(generatedParagraphs.data.para_A);
+            //setParagraphB(generatedParagraphs.data.second_para);
         } catch (error) {
             console.error('Error generating paragraphs:', error);
         } finally {
@@ -164,12 +165,13 @@ export default function InputForm({ session }: Props) {
                                 </Button>
                             </div>
                             <div>
-                            {educationParagraph && experienceParagraph && (
+                            {paragraph && (
                               <PDFDownloadLink
                                 document={
                                   <PDFDocument 
-                                    educationParagraph={educationParagraph} 
-                                    experienceParagraph={experienceParagraph} 
+                                    bodyParagraph={paragraph}
+                                    position={''} 
+                                    companyName={''}                                  
                                   />
                                 }
                                 fileName="your-gecover.pdf"
