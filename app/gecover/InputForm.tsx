@@ -31,12 +31,17 @@ export default function InputForm({ session }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [paragraph, setParagraph] = useState<string>('');
+  
   const [jobName, setJobName] = useState<string>('');
   const [companyName, setCompanyName] = useState<string>('');
 
   const [paragraphB, setParagraphB] = useState<string>('');
 
   const [resumeData, setResumeData] = useState<ResumeContent>({ contents: [] });
+
+  // const readSession = () => {
+  //   console.log(session.access_token);
+  // }
   
   const handleFileChange = async (file: File) => {
     setFile(file);
@@ -49,9 +54,11 @@ export default function InputForm({ session }: Props) {
       formData.append('type', 'application/pdf');
 
       try {
+        
         resumeList = await axios.post('http://localhost:5000/read_pdf/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${session.access_token}`
           },
         });
         setResumeData(resumeList.data);
@@ -76,7 +83,11 @@ export default function InputForm({ session }: Props) {
 
     if (url) {
       try {
-        urlList = await axios.post('http://localhost:5000/extract_url/', { url });
+        urlList = await axios.post('http://localhost:5000/extract_url/', { url }, {
+          headers: {
+            'Authorization' : `Bearer ${session.access_token}`
+          },
+        });
         console.log(urlList.data);
       } catch (error) {
         console.error('Error fetching URL:', error);
@@ -93,7 +104,11 @@ export default function InputForm({ session }: Props) {
             resume_documents: resumeData.contents, 
             }, {
                 cancelToken: source.token,
-                timeout: TIMEOUT_DURATION 
+                timeout: TIMEOUT_DURATION,
+                headers: {
+                  'Authorization' : `Bearer ${session.access_token}`
+                },
+                
             });
             // TODO - FIX CANCEL TOKEN
             source.cancel('Request was cancelled by the user.');
@@ -166,6 +181,9 @@ export default function InputForm({ session }: Props) {
                                     Generate
                                 </Button>
                             </div>
+                            {/* <Button onClick={readSession}>
+                                  hi!
+                            </Button> */}
                             <div>
                             {paragraph && (
                               <PDFDownloadLink
