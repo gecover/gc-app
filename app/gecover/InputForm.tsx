@@ -31,6 +31,9 @@ export default function InputForm({ session }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [paragraph, setParagraph] = useState<string>('');
+  const [jobName, setJobName] = useState<string>('');
+  const [companyName, setCompanyName] = useState<string>('');
+
   const [paragraphB, setParagraphB] = useState<string>('');
 
   const [resumeData, setResumeData] = useState<ResumeContent>({ contents: [] });
@@ -169,8 +172,6 @@ export default function InputForm({ session }: Props) {
                                 document={
                                   <PDFDocument 
                                     bodyParagraph={paragraph}
-                                    position={''} 
-                                    companyName={''}                                  
                                   />
                                 }
                                 fileName="your-gecover.pdf"
