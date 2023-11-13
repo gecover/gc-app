@@ -60,6 +60,8 @@ const introSet: string[] = [
     'Greetings of the day',
     'Salutations',
     'Warm greetings',
+    'Hello [Company Name]',
+    'Dear [Company Name] Team',
     'To whom it may concern',
     'I hope this message finds you well',
     'Greetings to the [Department Name] team',
@@ -98,8 +100,8 @@ interface PDFDocumentProps {
   
   const PDFDocument: React.FC<PDFDocumentProps> = ({
     bodyParagraph,
-    jobTitle="Machine Learning Engineer", // ADD POSITION, COMPANY, AND INDIVIDUAL NAME ENDPOINTS
-    companyName="OnDeck Fisheries AI",
+    jobTitle,
+    companyName,
   }) => {
     const randomIntro: string = introSet[Math.floor(Math.random() * introSet.length)].replace('[Company Name]', companyName);
     const randomClosing: string = closingSet[Math.floor(Math.random() * closingSet.length)];

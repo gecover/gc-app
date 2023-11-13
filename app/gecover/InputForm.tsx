@@ -19,8 +19,8 @@ const LoadingOverlay = () => (
       {/* TODO - Replace the above with a spinner or loading animation */}
     </div>
 );
-  
-type ResumeContent = {
+
+type ResponseContent = {
   contents: string[];
 };
 
@@ -34,9 +34,11 @@ export default function InputForm({ session }: Props) {
   const [jobName, setJobName] = useState<string>('');
   const [companyName, setCompanyName] = useState<string>('');
 
+  const [resumeData, setResumeData] = useState<ResponseContent>({ contents: [] });
+  const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
+
   const [paragraphB, setParagraphB] = useState<string>('');
 
-  const [resumeData, setResumeData] = useState<ResumeContent>({ contents: [] });
   
   const handleFileChange = async (file: File) => {
     setFile(file);
@@ -78,18 +80,21 @@ export default function InputForm({ session }: Props) {
       try {
         urlList = await axios.post('http://localhost:5000/extract_url/', { url });
         console.log(urlList.data);
+        setUrlData(urlList.data);
+        setJobName(urlList.data.job_title);
+        setCompanyName(urlList.data.company);
       } catch (error) {
         console.error('Error fetching URL:', error);
       }
     }
     
-    if (resumeData && urlList && urlList.data.contents) {
+    if (resumeData && urlData) {
         try {
             // Create a cancel token source
             const CancelToken = axios.CancelToken;
             const source = CancelToken.source();
             const generatedParagraphs = await axios.post('http://localhost:5000/generate_paragraphs/', {
-            requirements: urlList.data.contents,
+            requirements: urlData.contents,
             resume_documents: resumeData.contents, 
             }, {
                 cancelToken: source.token,
@@ -110,6 +115,7 @@ export default function InputForm({ session }: Props) {
       } else {
         console.log('Either resume list or URL list or both are not available.');
         setIsLoading(false);
+        // TODO - IMPLEMENT ERROR HANDLING THROUGH WARNING COMPONENT PROVIDING INFO: RESUME INSUFFICIENT? URL UNPROCESSABLE?
       }
   };
 
@@ -172,6 +178,8 @@ export default function InputForm({ session }: Props) {
                                 document={
                                   <PDFDocument 
                                     bodyParagraph={paragraph}
+                                    jobTitle={jobName}
+                                    companyName={companyName}
                                   />
                                 }
                                 fileName="your-gecover.pdf"
