@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     },
     body: {
       fontSize: 12,
+      paddingTop: 20, 
       lineHeight: 1.5,
     },
     header: {
@@ -109,10 +110,10 @@ interface PDFDocumentProps {
           <Text style={styles.header} fixed>
             ~ Created on gecover.com. WIP ~
           </Text>
-          <Text style={styles.body}>{randomIntro},</Text>
+          <Text style={styles.body}>{randomIntro}, </Text>
           <Text style={styles.body}>I am applying for the {jobTitle} position at {companyName}.</Text>
-          <Text style={styles.body}>{bodyParagraph}</Text>
-          <Text style={styles.body}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text>
+          <Text style={styles.body}>{bodyParagraph}  </Text>
+          {/* <Text style={styles.body}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text> */}
           <Text style={styles.body}>{randomClosing},</Text>
           <View style={styles.footer}>
             <Text>Your Name</Text>
