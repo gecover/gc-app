@@ -7,7 +7,10 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Snackbar,  { SnackbarProps }  from '@mui/joy/Snackbar';
+
 import 'styles/gecover.css';
+import Link from 'next/link';
+
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
@@ -20,7 +23,7 @@ interface Props {
 const LoadingOverlay = () => (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgress sx={{color: "pink"}}/>
+        <CircularProgress sx={{color: "pink-500"}}/>
       </Box>
     </div>
 );
@@ -92,7 +95,7 @@ export default function InputForm({ session }: Props) {
     // Step 3: Create a download link
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'example.txt';
+    link.download = 'gecover-demo.txt';
 
     // Append link to the body
     document.body.appendChild(link);
@@ -105,7 +108,7 @@ export default function InputForm({ session }: Props) {
 
   const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
-    console.log('URL RECIVED', url);
+    // this is where we do checks
   };
 
   const handleSubmit = async () => {
@@ -176,15 +179,22 @@ export default function InputForm({ session }: Props) {
   return (
     <>
     {isLoading && <LoadingOverlay />}
+    
     <section className="bg-black">
       <Snackbar color={color} open={open} autoHideDuration={1000} > {banner} </Snackbar>
 
-        <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
+        <div className="max-w-6xl py-8 px-4 mx-auto sm:py-16 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center">
+
                 <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
                     Generate Tailored Cover Letters
                 </h1>
-                <div className="mt-12">
+                <h1 className="text-lg pt-4 font-extrabold text-white sm:text-center sm:text-xl">
+                    If you're new, check out our 
+                </h1>
+                <Link className="font-black text-pink-500 text-xl text-center" href="/how-to"> first time user instructions </Link>
+
+                <div className="mt-8">
                     <div className="border border-pink-500 border-opacity-50 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
                         <div className="space-y-6">
                             <FileDrop handleFileChange={handleFileChange} />
