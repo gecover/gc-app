@@ -22,10 +22,13 @@ export default async function GenerateCoverLetter() {
 //   if (!subscription) {
 //     return redirect('/');
 //   }
+  if (!userDetails?.full_name) {
+    return redirect('/signin');
+  }
 
   return (
     <div>
-      <InputForm session={session} username={userDetails?.full_name}/>
+      <InputForm session={session} username={userDetails.full_name}/>
     </div>
   );
 }

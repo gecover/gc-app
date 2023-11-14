@@ -88,7 +88,7 @@ interface PDFDocumentProps {
     bodyParagraph,
     jobTitle,
     companyName,
-    userName
+    userName,
   }) => {
     const randomIntro: string = introSet[Math.floor(Math.random() * introSet.length)].replace('[Company Name]', companyName);
     const randomClosing: string = closingSet[Math.floor(Math.random() * closingSet.length)];
