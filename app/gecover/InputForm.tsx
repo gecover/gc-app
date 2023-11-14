@@ -7,6 +7,7 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Snackbar,  { SnackbarProps }  from '@mui/joy/Snackbar';
+import 'styles/gecover.css';
 
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -176,7 +177,10 @@ export default function InputForm({ session }: Props) {
                                     label="Enter Job Posting URL" 
                                     variant="outlined" 
                                     onChange={handleUrlChange}
-                                    className="text-white bg-zinc-800"
+                                    style={{
+                                      color: 'white',
+                                    }}
+                                    className="my-textfield"
                                     InputLabelProps={{
                                         className: "text-white",
                                         classes: { focused: "text-white" }
@@ -206,7 +210,9 @@ export default function InputForm({ session }: Props) {
                                 <Button 
                                     variant="contained" 
                                     onClick={handleSubmit}
-                                    className="bg-pink-500 hover:bg-pink-600 text-white"
+                                    style={{ backgroundColor: '#ec4899', color: 'white'}}
+                                    // onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#be185d')}
+                                    // onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#ec4899')}
                                 >
                                     Generate
                                 </Button>
