@@ -5,7 +5,7 @@ import {
   getSubscription
 } from '@/app/supabase-server';
 import { redirect } from 'next/navigation';
-import InputForm from './InputForm';
+// import InputForm from './InputForm';
 
 
 export default async function GenerateCoverLetter() {
@@ -29,7 +29,7 @@ export default async function GenerateCoverLetter() {
 
   return (
     <div>
-      <InputForm session={session}/>
+      {/* <InputForm session={session}/> */}
     </div>
   );
 }

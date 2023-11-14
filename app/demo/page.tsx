@@ -1,14 +1,16 @@
 import React from 'react';
 import {
-  getSession
+  getSession,
+  getUserDetails
 } from '@/app/supabase-server';
 import { redirect } from 'next/navigation';
 import InputForm from './InputForm';
 
 
 export default async function GenerateCoverLetter() {
-  const [session] = await Promise.all([
-    getSession()
+  const [session, userDetails] = await Promise.all([
+    getSession(),
+    getUserDetails()
   ]);
 
   if (!session) {
