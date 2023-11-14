@@ -64,7 +64,6 @@ const introSet: string[] = [
     'Dear [Company Name] Team',
     'To whom it may concern',
     'I hope this message finds you well',
-    'Greetings to the [Department Name] team',
     'It’s a pleasure to connect with you',
     'I am excited to address this cover letter to you'
 ];
