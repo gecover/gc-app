@@ -1,0 +1,4 @@
+.my-textfield ::placeholder {
+    color: white;
+    opacity: 1; /* Required for some browsers to ensure color is applied */
+  }
