@@ -56,7 +56,7 @@ const FileDrop = ({ handleFileChange }: FileDropProps) => {
     >
       <input type="file" onChange={handleChange} className="hidden" />
       <p className="text-center text-white">
-        Drag and drop your resume here, or
+        Drag and drop your resume here, or&nbsp;
         <span 
           className="text-pink-500 underline cursor-pointer"
           onClick={() => {
