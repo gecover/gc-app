@@ -1,28 +1,20 @@
 import React from 'react';
 import {
-  getSession,
-  getUserDetails,
-  getSubscription
+  getSession
 } from '@/app/supabase-server';
 import { redirect } from 'next/navigation';
 import InputForm from './InputForm';
 
 
 export default async function GenerateCoverLetter() {
-  const [session, userDetails, subscription] = await Promise.all([
-    getSession(),
-    getUserDetails(),
-    getSubscription()
+  const [session] = await Promise.all([
+    getSession()
   ]);
 
   if (!session) {
     return redirect('/signin');
   }
   
-//   if (!subscription) {
-//     return redirect('/');
-//   }
-
   return (
     <div>
       <InputForm session={session}/>

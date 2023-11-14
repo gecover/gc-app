@@ -1,4 +1,9 @@
 .my-textfield ::placeholder {
     color: white;
     opacity: 1; /* Required for some browsers to ensure color is applied */
-  }
+}
+
+.no-tailwind-focus-ring .MuiOutlinedInput-root:focus-within {
+  @apply outline-none ring-0;
+}
+  

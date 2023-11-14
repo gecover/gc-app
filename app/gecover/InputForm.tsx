@@ -172,40 +172,40 @@ export default function InputForm({ session }: Props) {
                     <div className="border border-pink-500 border-opacity-50 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
                         <div className="space-y-6">
                             <FileDrop handleFileChange={handleFileChange} />
-                                <TextField 
-                                    fullWidth 
-                                    label="Enter Job Posting URL" 
-                                    variant="outlined" 
-                                    onChange={handleUrlChange}
-                                    style={{
-                                      color: 'white',
-                                    }}
-                                    className="my-textfield"
-                                    InputLabelProps={{
-                                        className: "text-white",
-                                        classes: { focused: "text-white" }
-                                    }}
-                                    InputProps={{
-                                        className: "text-white",
-                                        classes: { notchedOutline: "border-white" }
-                                    }}
-                                    sx={{
-                                        '& label.Mui-focused': {
-                                          color: 'white', 
-                                        },
-                                        '& .MuiOutlinedInput-root': {
-                                          '& fieldset': {
-                                            borderColor: 'white', 
-                                          },
-                                          '&:hover fieldset': {
-                                            borderColor: 'white', 
-                                          },
-                                          '&.Mui-focused fieldset': {
-                                            borderColor: 'white', 
-                                          },
-                                        },
-                                    }}
-                                />
+                            <TextField 
+                                fullWidth 
+                                label="Enter Job Posting URL" 
+                                variant="outlined" 
+                                onChange={handleUrlChange}
+                                style={{
+                                  color: 'white',
+                                }}
+                                className="my-textfield"
+                                InputLabelProps={{
+                                    className: "text-white",
+                                    classes: { focused: "text-white" }
+                                }}
+                                InputProps={{
+                                    className: "text-white",
+                                    classes: { notchedOutline: "border-white" }
+                                }}
+                                sx={{
+                                    '& label.Mui-focused': {
+                                      color: 'white', 
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                      '& fieldset': {
+                                        borderColor: 'white', 
+                                      },
+                                      '&:hover fieldset': {
+                                        borderColor: 'white', 
+                                      },
+                                      '&.Mui-focused fieldset': {
+                                        borderColor: 'white', 
+                                      },
+                                    },
+                                }}
+                            />
                             <div className="flex justify-center">
                                 <Button 
                                     variant="contained" 

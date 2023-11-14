@@ -199,39 +199,39 @@ export default function InputForm({ session }: Props) {
                         <div className="space-y-6">
                             <FileDrop handleFileChange={handleFileChange} />
                             <TextField 
-                                    fullWidth 
-                                    label="Enter Job Posting URL" 
-                                    variant="outlined" 
-                                    onChange={handleUrlChange}
-                                    style={{
-                                      color: 'white',
-                                    }}
-                                    className="my-textfield"
-                                    InputLabelProps={{
-                                        className: "text-white",
-                                        classes: { focused: "text-white" }
-                                    }}
-                                    InputProps={{
-                                        className: "text-white",
-                                        classes: { notchedOutline: "border-white" }
-                                    }}
-                                    sx={{
-                                        '& label.Mui-focused': {
-                                          color: 'white', 
-                                        },
-                                        '& .MuiOutlinedInput-root': {
-                                          '& fieldset': {
-                                            borderColor: 'white', 
-                                          },
-                                          '&:hover fieldset': {
-                                            borderColor: 'white', 
-                                          },
-                                          '&.Mui-focused fieldset': {
-                                            borderColor: 'white', 
-                                          },
-                                        },
-                                    }}
-                                />
+                                fullWidth 
+                                label="Enter Job Posting URL" 
+                                variant="outlined" 
+                                onChange={handleUrlChange}
+                                style={{
+                                  color: 'white',
+                                }}
+                                className="my-textfield no-tailwind-focus-ring"
+                                InputLabelProps={{
+                                    className: "text-white",
+                                    classes: { focused: "text-white" }
+                                }}
+                                InputProps={{
+                                    className: "text-white",
+                                    classes: { notchedOutline: "border-white" }
+                                }}
+                                sx={{
+                                    '& label.Mui-focused': {
+                                      color: 'white', 
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                      '& fieldset': {
+                                        borderColor: 'white', 
+                                      },
+                                      '&:hover fieldset': {
+                                        borderColor: 'white', 
+                                      },
+                                      '&.Mui-focused fieldset': {
+                                        borderColor: 'white', 
+                                      },
+                                    },
+                                }}
+                            />
                             <div className="flex justify-center">
                                 <Button 
                                     variant="contained" 
