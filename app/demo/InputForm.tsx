@@ -14,11 +14,11 @@ import Link from 'next/link';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
-import { Session, User } from '@supabase/supabase-js';
+import { Session } from '@supabase/supabase-js';
 
 interface Props {
   session: Session;
-  user: User;
+  username: string;
 }
 
 const LoadingOverlay = () => (
@@ -33,7 +33,7 @@ type ResponseContent = {
   contents: string[];
 };
 
-export default function InputForm({ session, user }: Props) {
+export default function InputForm({ session, username }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string>('');
 
@@ -250,7 +250,7 @@ export default function InputForm({ session, user }: Props) {
                                     bodyParagraph={paragraph}
                                     jobTitle={jobName}
                                     companyName={companyName}
-                                    userName={user.full_name}
+                                    userName={username}
                                   />
                                 }
                                 fileName="your-gecover.pdf"

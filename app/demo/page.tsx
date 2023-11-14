@@ -25,7 +25,7 @@ export default async function GenerateCoverLetter() {
 
   return (
     <div>
-      <InputForm session={session} user={userDetails}/>
+      <InputForm session={session} username={userDetails?.full_name}/>
     </div>
   );
 }
