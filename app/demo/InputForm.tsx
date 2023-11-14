@@ -86,6 +86,24 @@ export default function InputForm({ session }: Props) {
     }
   };
 
+  const handleDownload = () => {
+    const blob = new Blob([paragraph], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    // Step 3: Create a download link
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'example.txt';
+
+    // Append link to the body
+    document.body.appendChild(link);
+
+    // Step 4: Trigger the download
+    link.click();
+
+    // Clean up and remove the link
+    link.parentNode.removeChild(link);
+  }
+
   const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
     console.log('URL RECIVED', url);
@@ -211,8 +229,8 @@ export default function InputForm({ session }: Props) {
                                     Generate
                                 </Button>
                             </div>
-                            <div>
-                            {paragraph && (
+                            
+                            {paragraph && (<Box>
                               <PDFDownloadLink
                                 document={
                                   <PDFDocument 
@@ -227,13 +245,15 @@ export default function InputForm({ session }: Props) {
                                   loading ? 'Loading document...' : 'Download PDF'
                                 }
                               </PDFDownloadLink>
-                            )}
+                                <Button onClick={handleDownload}>
+                                Download txt
+                                </Button>
+                            </Box>)}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
     </>
   );
