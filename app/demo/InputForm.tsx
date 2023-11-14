@@ -7,7 +7,7 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Snackbar,  { SnackbarProps }  from '@mui/joy/Snackbar';
-
+import 'styles/gecover.css';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
@@ -188,12 +188,15 @@ export default function InputForm({ session }: Props) {
                     <div className="border border-pink-500 border-opacity-50 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
                         <div className="space-y-6">
                             <FileDrop handleFileChange={handleFileChange} />
-                                <TextField 
+                            <TextField 
                                     fullWidth 
                                     label="Enter Job Posting URL" 
                                     variant="outlined" 
                                     onChange={handleUrlChange}
-                                    className="text-white bg-zinc-800"
+                                    style={{
+                                      color: 'white',
+                                    }}
+                                    className="my-textfield"
                                     InputLabelProps={{
                                         className: "text-white",
                                         classes: { focused: "text-white" }
@@ -223,7 +226,7 @@ export default function InputForm({ session }: Props) {
                                 <Button 
                                     variant="contained" 
                                     onClick={handleSubmit}
-                                    className="bg-pink-500 hover:bg-pink-600 text-white"
+                                    style={{ backgroundColor: '#ec4899', color: 'white'}}
                                 >
                                     Generate
                                 </Button>
