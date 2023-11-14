@@ -22,6 +22,7 @@ import { Session } from '@supabase/supabase-js';
 
 interface Props {
   session: Session;
+  userName: string;
 }
 
 const LoadingOverlay = () => (
@@ -36,7 +37,7 @@ type ResponseContent = {
   contents: string[];
 };
 
-export default function InputForm({ session }: Props) {
+export default function InputForm({ session, userName }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
@@ -277,6 +278,7 @@ export default function InputForm({ session }: Props) {
                               <PDFDownloadLink
                                 document={
                                   <PDFDocument 
+                                   userName={userName}
                                     bodyParagraph={paragraph}
                                     jobTitle={jobName}
                                     companyName={companyName}

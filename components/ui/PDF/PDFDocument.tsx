@@ -55,36 +55,22 @@ const introSet: string[] = [
     'Greetings',
     'Dear Hiring Manager',
     'Good day',
-    'Hello and thank you for this opportunity',
     'Hi there',
     'Greetings of the day',
     'Salutations',
     'Warm greetings',
-    'Hello [Company Name]',
-    'Dear [Company Name] Team',
     'To whom it may concern',
     'I hope this message finds you well',
-    'It’s a pleasure to connect with you',
-    'I am excited to address this cover letter to you'
 ];
 
 const closingSet: string[] = [
     'Sincerely',
-    'Best regards',
     'Kind regards',
-    'Yours truly',
-    'Warm regards',
-    'With best regards',
     'Respectfully',
-    'Yours faithfully',
     'Thank you for your consideration',
     'With appreciation',
-    'Cordially',
     'Looking forward to your response',
-    'With sincere thanks',
     'Anticipating your reply',
-    'In gratitude',
-    'With eagerness for the opportunity',
     'Best wishes',
     'Thank you for your time and consideration',
     'Hope to hear from you soon',
@@ -95,12 +81,14 @@ interface PDFDocumentProps {
     bodyParagraph: string;
     jobTitle: string; 
     companyName: string; 
+    userName: string;
   }
   
   const PDFDocument: React.FC<PDFDocumentProps> = ({
     bodyParagraph,
     jobTitle,
     companyName,
+    userName,
   }) => {
     const randomIntro: string = introSet[Math.floor(Math.random() * introSet.length)].replace('[Company Name]', companyName);
     const randomClosing: string = closingSet[Math.floor(Math.random() * closingSet.length)];
@@ -116,10 +104,7 @@ interface PDFDocumentProps {
           <Text style={styles.body}>{bodyParagraph}  </Text>
           {/* <Text style={styles.body}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text> */}
           <Text style={styles.body}>{randomClosing},</Text>
-          <View style={styles.footer}>
-            <Text>Your Name</Text>
-            <Text>Your Contact Information</Text>
-          </View>
+          <Text style={styles.body}>{userName}</Text>
         </Page>
       </Document>
     );

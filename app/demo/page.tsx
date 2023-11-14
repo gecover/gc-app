@@ -14,10 +14,18 @@ export default async function GenerateCoverLetter() {
   if (!session) {
     return redirect('/signin');
   }
-  
+
+  if (!userDetails) {
+    return redirect('/signin');
+  }
+  let name = ''
+  if (userDetails.full_name){
+    name = userDetails.full_name
+  }
+
   return (
     <div>
-      <InputForm session={session}/>
+      <InputForm session={session} userName={name}/>
     </div>
   );
 }

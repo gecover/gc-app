@@ -226,6 +226,7 @@ export default function InputForm({ session }: Props) {
                                     bodyParagraph={paragraph}
                                     jobTitle={jobName}
                                     companyName={companyName}
+                                    userName={''}
                                   />
                                 }
                                 fileName="your-gecover.pdf"
