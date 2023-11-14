@@ -48,15 +48,16 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-black loading">
         <SupabaseProvider>
-          {/* @ts-expect-error */}
           <Navbar />
           <main
             id="skip"
             className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
           >
             {children}
-          </main>
-          {/* <Footer /> */}
+            <footer className="bg-gray-800 text-white p-4 text-center">
+          <p>&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
+        </footer>
+          </main>        
         </SupabaseProvider>
       </body>
     </html>
