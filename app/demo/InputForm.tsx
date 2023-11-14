@@ -14,10 +14,11 @@ import Link from 'next/link';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
-import { Session } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 
 interface Props {
   session: Session;
+  user: User;
 }
 
 const LoadingOverlay = () => (
