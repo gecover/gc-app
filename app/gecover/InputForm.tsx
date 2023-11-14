@@ -213,6 +213,7 @@ export default function InputForm({ session }: Props) {
                             </div>
                             <div>
                             {paragraph && (
+                              <Box>
                               <PDFDownloadLink
                                 document={
                                   <PDFDocument 
@@ -227,6 +228,8 @@ export default function InputForm({ session }: Props) {
                                   loading ? 'Loading document...' : 'Download PDF'
                                 }
                               </PDFDownloadLink>
+                              </Box>
+
                             )}
                             </div>
                         </div>

@@ -55,8 +55,10 @@ export default function RootLayout({
             className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
           >
             {children}
-            <footer className="bg-gray-800 text-white p-4 text-center">
-          <p>&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
+            <footer className="flex flex-row justify-center bg-gray-800 text-white p-4 text-center">
+              <p className="m-2">&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
+              <a className="m-2" href="https://www.termsfeed.com/live/15cd706e-a80f-4ad0-a1cc-34f68716ad27"> Privacy Policy</a>
+
         </footer>
           </main>        
         </SupabaseProvider>
