@@ -52,11 +52,12 @@ const FileDrop = ({ handleFileChange }: FileDropProps) => {
       onDragLeave={handleDrag} 
       onDragOver={handleDrag} 
       onDrop={handleDrop} 
-      className={`p-6 border-2 border-dashed ${dragActive ? 'border-pink-500' : 'border-pink-400'}`}
+      className={`p-6 border-2 border-dashed ${dragActive ? 'border-pink-700' : 'border-pink-500'}`}
     >
       <input type="file" onChange={handleChange} className="hidden" />
       <p className="text-center text-white">
-        Drag and drop your resume here, or
+        Drag and drop your resume here, or 
+        <br></br>
         <span 
           className="text-pink-500 underline cursor-pointer"
           onClick={() => {
