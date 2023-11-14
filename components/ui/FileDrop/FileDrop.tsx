@@ -1,11 +1,16 @@
 import React, { useCallback, useState, ChangeEvent, DragEvent } from 'react';
 
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+
+
 /**
  * Props for FileDrop component.
  * @property {Function} handleFileChange - Callback function to handle the file selected by the user.
  */
 interface FileDropProps {
   handleFileChange: (file: File) => void; // Define the type for handleFileChange
+  icon: string;
 }
 
 /**
@@ -15,7 +20,7 @@ interface FileDropProps {
  * @param {FileDropProps} props - The props for the component.
  * @returns {React.ReactElement} - The React element for the file drop component.
  */
-const FileDrop = ({ handleFileChange }: FileDropProps) => {
+const FileDrop = ({ handleFileChange, icon }: FileDropProps) => {
   const [dragActive, setDragActive] = useState(false);
 
   // Handles the drag events to set active state
@@ -54,6 +59,13 @@ const FileDrop = ({ handleFileChange }: FileDropProps) => {
       onDrop={handleDrop} 
       className={`p-6 border-2 border-dashed ${dragActive ? 'border-pink-700' : 'border-pink-500'}`}
     >
+      <div className="flex justify-center items-center mb-4">
+        {icon === 'check' ? (
+          <CheckIcon className={`icon-transition ${icon === 'check' ? 'icon-rotate' : ''}`} style={{ color: 'green' }} />
+        ) : (
+          <CloseIcon className={`icon-transition ${icon === 'X' ? 'icon-rotate' : ''}`} style={{ color: 'white' }} />
+        )}
+      </div>
       <input type="file" onChange={handleChange} className="hidden" />
       <p className="text-center text-white">
         Drag and drop your resume here, or 
