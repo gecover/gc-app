@@ -104,7 +104,7 @@ interface PDFDocumentProps {
           <Text style={styles.body}>{bodyParagraph}  </Text>
           {/* <Text style={styles.body}>I am motivated by the opportunity to join your team and contribute to your company's success.</Text> */}
           <Text style={styles.body}>{randomClosing},</Text>
-          <Text>{userName}</Text>
+          <Text style={styles.body}>{userName}</Text>
         </Page>
       </Document>
     );
