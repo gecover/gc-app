@@ -32,7 +32,7 @@ type ResponseContent = {
   contents: string[];
 };
 
-export default function InputForm({ session }: Props) {
+export default function InputForm({ session, user }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string>('');
 
@@ -249,6 +249,7 @@ export default function InputForm({ session }: Props) {
                                     bodyParagraph={paragraph}
                                     jobTitle={jobName}
                                     companyName={companyName}
+                                    userName={user.full_name}
                                   />
                                 }
                                 fileName="your-gecover.pdf"

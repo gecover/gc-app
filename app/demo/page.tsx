@@ -15,9 +15,9 @@ export default async function GenerateCoverLetter() {
     getSubscription()
   ]);
 
-  if (!session) {
-    return redirect('/signin');
-  }
+  // if (!session) {
+  //   return redirect('/signin');
+  // }
   
 //   if (!subscription) {
 //     return redirect('/');
@@ -25,7 +25,7 @@ export default async function GenerateCoverLetter() {
 
   return (
     <div>
-      <InputForm session={session}/>
+      <InputForm session={session} user={userDetails}/>
     </div>
   );
 }
