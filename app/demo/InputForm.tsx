@@ -101,7 +101,6 @@ export default function InputForm({ session }: Props) {
     link.click();
 
     // Clean up and remove the link
-    link.parentNode.removeChild(link);
   }
 
   const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
