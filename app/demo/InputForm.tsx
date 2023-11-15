@@ -151,13 +151,13 @@ export default function InputForm({ session, userName }: Props) {
           setUrlIcon('check');
         }
 
-        if (resumeData && urlData && (fileIcon == 'check')) {
+        if (resumeData) {
           try {
               // Create a cancel token source
               const CancelToken = axios.CancelToken;
               const source = CancelToken.source();
               const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
-              requirements: urlData.contents,
+              requirements: urlList.data.contents,
               resume_documents: resumeData.contents, 
               }, {
                   cancelToken: source.token,
