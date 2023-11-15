@@ -7,17 +7,12 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Snackbar,  { SnackbarProps }  from '@mui/joy/Snackbar';
-
 import 'styles/gecover.css';
 import Link from 'next/link';
-
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
-
-
 import { PDFDownloadLink } from '@react-pdf/renderer';
-
 import { Session } from '@supabase/supabase-js';
 
 interface Props {
@@ -28,7 +23,7 @@ interface Props {
 const LoadingOverlay = () => (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgress sx={{color: "pink-500"}}/>
+        <CircularProgress sx={{color: "pink"}}/>
       </Box>
     </div>
 );
@@ -50,7 +45,8 @@ export default function InputForm({ session, userName }: Props) {
   const [resumeData, setResumeData] = useState<ResponseContent>({ contents: [] });
   const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
   const [fileIcon, setFileIcon] = useState('X'); // 'X' or 'check'
-  const [urlIcon, setUrlIcon] = useState('X'); // 'X' or 'check'
+  const [urlIcon, setUrlIcon] = useState('X'); 
+
 
   
   const [paragraphB, setParagraphB] = useState<string>('');
@@ -87,8 +83,6 @@ export default function InputForm({ session, userName }: Props) {
           setBanner(`You loaded a pdf with ${length} chunks. Parsing did not work well, and you likely will not get good results.`);
           setFileIcon('X');
         }
-        
-        // console.log(resumeList.data);
       } catch (error) {
         console.error('Error uploading file:', error);
       } 
@@ -264,8 +258,8 @@ export default function InputForm({ session, userName }: Props) {
                                     variant="contained" 
                                     onClick={handleSubmit}
                                     style={{
-                                      backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#f2b6d2' : '#ec4899',
-                                      color: fileIcon !== 'check' || urlIcon !== 'check' ? '#ffffff80' : 'white',
+                                      backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                                      color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
                                       cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
                                     }}
                                     disabled={fileIcon !== 'check' || urlIcon !== 'check'}

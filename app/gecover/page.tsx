@@ -5,7 +5,7 @@ import {
   getSubscription
 } from '@/app/supabase-server';
 import { redirect } from 'next/navigation';
-// import InputForm from './InputForm';
+import InputForm from './InputForm';
 
 
 export default async function GenerateCoverLetter() {
@@ -21,15 +21,24 @@ export default async function GenerateCoverLetter() {
   if (!session) {
     return redirect('/signin');
   }
+
+  if (!userDetails) {
+    return redirect('/signin');
+  }
   
   // VALIDATE USER SUBSCRIPTION STATUS  
   if (!subscription) {
     return redirect('/');
   }
 
+  let name = ''
+  if (userDetails.full_name){
+    name = userDetails.full_name
+  }
+
   return (
     <div>
-      {/* <InputForm session={session}/> */}
+      <InputForm session={session} user={name}/>
     </div>
   );
 }
