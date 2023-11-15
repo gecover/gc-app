@@ -12,7 +12,17 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans]
+      },
+      keyframes: {
+        pump: {
+          '0%': { bgOpacity: 20 },
+          '100%': { bgOpacity: 50 },
+        }
+      },
+      animation: {
+        cardpump: 'pump 1s ease-in-out',
       }
+      
     }
   },
   plugins: []

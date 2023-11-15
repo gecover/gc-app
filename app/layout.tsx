@@ -6,11 +6,11 @@ import 'styles/main.css';
 
 const meta = {
   title: 'gecover - Automated, Tailored Cover Letters',
-  description: 'Brought to you by Vercel, Stripe, and Supabase.',
+  description: 'Brought to you by GeCover LLC.',
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
-  url: 'https://subscription-starter.vercel.app',
+  url: 'https://gecover.vercel.app',
   type: 'website'
 };
 
@@ -55,8 +55,11 @@ export default function RootLayout({
             className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
           >
             {children}
-          </main>
-          {/* <Footer /> */}
+          </main>    
+          <footer className="flex flex-row justify-center bg-gray-800 text-white p-4 text-center">
+              <p className="m-2">&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
+              <a className="m-2" href="https://www.termsfeed.com/live/15cd706e-a80f-4ad0-a1cc-34f68716ad27"> Privacy Policy</a>
+          </footer>    
         </SupabaseProvider>
       </body>
     </html>

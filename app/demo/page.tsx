@@ -13,17 +13,17 @@ export default async function GenerateCoverLetter() {
     getUserDetails()
   ]);
 
-  // if (!session) {
-  //   return redirect('/signin');
-  // }
+  if (!session) {
+    return redirect('/signin');
+  }
 
-  // if (!userDetails) {
-  //   return redirect('/signin');
-  // }
+  if (!userDetails) {
+    return redirect('/signin');
+  }
   let name = ''
-  // if (userDetails.full_name){
-  //   name = userDetails.full_name
-  // }
+  if (userDetails.full_name){
+    name = userDetails.full_name
+  }
 
   return (
     <div>
