@@ -224,8 +224,8 @@ export default function InputForm({ session, userName }: Props) {
                                 }}
                                 className="my-textfield no-tailwind-focus-ring"
                                 InputLabelProps={{
-                                  className: "text-white",
-                                  classes: { focused: "text-white" }
+                                    className: "text-white",
+                                    classes: { focused: "text-white" }
                                 }}
                                 InputProps={{
                                   endAdornment: (
@@ -234,10 +234,7 @@ export default function InputForm({ session, userName }: Props) {
                                     </InputAdornment>
                                   ),
                                   className: "text-white",
-                                  style: { color: 'white' }, 
-                                  inputProps: {
-                                    style: { color: 'white', '::placeholder': { color: 'white' } } 
-                                  }
+                                  classes: { notchedOutline: "border-white" }
                                 }}
                                 sx={{
                                     '& label.Mui-focused': {
