@@ -234,7 +234,6 @@ export default function InputForm({ session, userName }: Props) {
                                     </InputAdornment>
                                   ),
                                   className: "text-white",
-                                  classes: { notchedOutline: "border-white" },
                                   style: { color: 'white' }, 
                                   inputProps: {
                                     style: { color: 'white', '::placeholder': { color: 'white' } } 
