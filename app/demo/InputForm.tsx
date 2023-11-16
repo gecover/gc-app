@@ -297,7 +297,7 @@ export default function InputForm({ session, userName }: Props) {
                                 label="Sam Altman Mode"
                                 size="lg"
                                 variant="outlined"
-                                checked={isAltman}
+                                checked={model === 'altman' ? true : false}
                                 onChange={handleAltmanChange} 
                                 style={{
                                   color: 'white',
