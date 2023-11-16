@@ -48,7 +48,7 @@ export default function InputForm({ session, userName }: Props) {
   const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
   const [fileIcon, setFileIcon] = useState('X'); // 'X' or 'check'
   const [urlIcon, setUrlIcon] = useState('X'); 
-  const [isAltman, setIsAltman] = useState(false);  // Altman mode state
+  const [model, setModel] = useState('normal'); 
 
   const [paragraphB, setParagraphB] = useState<string>('');
   const label_style = {
@@ -60,7 +60,7 @@ export default function InputForm({ session, userName }: Props) {
   }
   
   const handleAltmanChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsAltman(event.target.checked);
+    setModel(event.target.checked ? 'altman' : 'normal');
   };
 
   const handleFileChange = async (file: File) => {
@@ -138,9 +138,9 @@ export default function InputForm({ session, userName }: Props) {
   };
 
   const handleSubmit = async () => {
-    const TIMEOUT_DURATION = 120000;
+    const TIMEOUT_DURATION = 150000; 
     setIsLoading(true);
-    console.log("Model: ", isAltman);
+    console.log("Model: ", model);
 
     let urlList = null;
     if ((urlIcon == 'check')) {
@@ -167,9 +167,10 @@ export default function InputForm({ session, userName }: Props) {
               // Create a cancel token source
               const CancelToken = axios.CancelToken;
               const source = CancelToken.source();
-              const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/?model=${isAltman}`, {
+              const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
               requirements: urlList.data.contents,
               resume_documents: resumeData.contents,
+              model: {'model' : model},
               }, {
                   cancelToken: source.token,
                   timeout: TIMEOUT_DURATION,
