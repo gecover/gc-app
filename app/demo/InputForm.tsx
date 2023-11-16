@@ -138,7 +138,7 @@ export default function InputForm({ session, userName }: Props) {
   };
 
   const handleSubmit = async () => {
-    const TIMEOUT_DURATION = 60000;
+    const TIMEOUT_DURATION = 120000;
     setIsLoading(true);
     console.log("Model: ", isAltman);
 
