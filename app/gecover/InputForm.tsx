@@ -49,7 +49,6 @@ export default function InputForm({ session, user }: Props) {
   
   const [paragraphB, setParagraphB] = useState<string>('');
 
-  
   const handleFileChange = async (file: File) => {
     setFile(file);
     console.log('FILE RECEIVED', file);
@@ -81,8 +80,6 @@ export default function InputForm({ session, user }: Props) {
           setBanner(`You loaded a pdf with ${length} chunks. Parsing did not work well, and you likely will not get good results.`);
           setFileIcon('X');
         }
-        
-        // console.log(resumeList.data);
       } catch (error) {
         console.error('Error uploading file:', error);
       } 
@@ -151,13 +148,13 @@ export default function InputForm({ session, user }: Props) {
           setUrlIcon('check');
         }
 
-        if (resumeData && urlData && (fileIcon == 'check')) {
+        if (resumeData) {
           try {
               // Create a cancel token source
               const CancelToken = axios.CancelToken;
               const source = CancelToken.source();
               const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
-              requirements: urlData.contents,
+              requirements: urlList.data.contents,
               resume_documents: resumeData.contents, 
               }, {
                   cancelToken: source.token,

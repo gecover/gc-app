@@ -1,5 +1,5 @@
 'use client';
-import { Card, Grid, TextField, Button,  Typography } from '@mui/material';
+import {TextField, Button} from '@mui/material';
 import {FormControl, FormLabel, Input, FormHelperText } from '@mui/joy'
 import FileDrop from '../../components/ui/FileDrop';
 import PDFDocument from '../../components/ui/PDF/PDFDocument';
@@ -15,6 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Session } from '@supabase/supabase-js';
+import Checkbox from '@mui/joy/Checkbox';
 
 interface Props {
   session: Session;
@@ -47,7 +48,8 @@ export default function InputForm({ session, userName }: Props) {
   const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
   const [fileIcon, setFileIcon] = useState('X'); // 'X' or 'check'
   const [urlIcon, setUrlIcon] = useState('X'); 
-  
+  const [isAltman, setIsAltman] = useState(false);  // Altman mode state
+
   const [paragraphB, setParagraphB] = useState<string>('');
   const label_style = {
     textOverflow: 'ellipsis',
@@ -55,9 +57,12 @@ export default function InputForm({ session, userName }: Props) {
     overflow: 'hidden',
     width: '100%',
     color: 'red'
-
   }
   
+  const handleAltmanChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsAltman(event.target.checked);
+  };
+
   const handleFileChange = async (file: File) => {
     setFile(file);
     console.log('FILE RECEIVED', file);
@@ -135,6 +140,7 @@ export default function InputForm({ session, userName }: Props) {
   const handleSubmit = async () => {
     const TIMEOUT_DURATION = 60000;
     setIsLoading(true);
+    console.log("Model: ", isAltman);
 
     let urlList = null;
     if ((urlIcon == 'check')) {
@@ -156,15 +162,14 @@ export default function InputForm({ session, userName }: Props) {
           setBanner(`Successfully loaded ${urlList.data.contents.length} job requirements.`);
           setUrlIcon('check');
         }
-
         if (resumeData) {
           try {
               // Create a cancel token source
               const CancelToken = axios.CancelToken;
               const source = CancelToken.source();
-              const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
+              const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/?model=${isAltman}`, {
               requirements: urlList.data.contents,
-              resume_documents: resumeData.contents, 
+              resume_documents: resumeData.contents,
               }, {
                   cancelToken: source.token,
                   timeout: TIMEOUT_DURATION,
@@ -188,7 +193,6 @@ export default function InputForm({ session, userName }: Props) {
         setIsLoading(false);
         // TODO - IMPLEMENT ERROR HANDLING THROUGH WARNING COMPONENT PROVIDING INFO: RESUME INSUFFICIENT? URL UNPROCESSABLE?
       }
-
       setUrlData(urlList.data);
       setJobName(urlList.data.job_title.trim());
       setCompanyName(urlList.data.company.trim());
@@ -201,21 +205,16 @@ export default function InputForm({ session, userName }: Props) {
   return (
     <>
     {isLoading && <LoadingOverlay />}
-    
     <section className="bg-black">
       <Snackbar color={color} open={open} autoHideDuration={1000} > {banner} </Snackbar>
-
         <div className="max-w-6xl py-8 px-4 mx-auto sm:py-16 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center">
-
                 <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
                     Generate Tailored Cover Letters
                 </h1>
                 <h1 className="text-lg pt-4 font-extrabold text-white sm:text-center sm:text-xl">
-                    If you're new, check out our 
+                    For a smooth start, please take a moment to explore our <Link className="font-black text-pink-500 text-xl text-center" href="/how-to">helpful guide for first-time users. </Link>
                 </h1>
-                <Link className="font-black text-pink-500 text-xl text-center" href="/how-to"> first time user instructions </Link>
-
                 <div className="mt-8">
                     <div className="border-2 border-pink-500 border-opacity-70 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
                         <div className="space-y-6">
@@ -289,28 +288,61 @@ export default function InputForm({ session, userName }: Props) {
                                 >
                                     Generate
                                 </Button>
+                                
                             </div>
-                            
-                            {paragraph && (<Box>
-                              <PDFDownloadLink
-                                document={
-                                  <PDFDocument 
-                                   userName={userName}
-                                    bodyParagraph={paragraph}
-                                    jobTitle={jobName}
-                                    companyName={companyName}
-                                  />
-                                }
-                                fileName="your-gecover.pdf"
-                              >
-                                {({ blob, url, loading, error }) =>
-                                  loading ? 'Loading document...' : 'Download PDF'
-                                }
-                              </PDFDownloadLink>
-                                <Button onClick={handleDownload}>
-                                Download txt
-                                </Button>
-                            </Box>)}
+                            <div className="flex justify-end " style={{ marginTop: '-30px' }}>
+                              <Checkbox
+                                color="neutral"
+                                label="Sam Altman Mode"
+                                size="lg"
+                                variant="outlined"
+                                checked={isAltman}
+                                onChange={handleAltmanChange} 
+                                style={{
+                                  color: 'white',
+                                }}
+                              />
+                            </div>
+                              {paragraph && (
+                                <Box display="flex" justifyContent="center" alignItems="center" spacing={2}>
+                                    <PDFDownloadLink
+                                        document={
+                                            <PDFDocument
+                                                userName={userName}
+                                                bodyParagraph={paragraph}
+                                                jobTitle={jobName}
+                                                companyName={companyName}
+                                            />
+                                        }
+                                        fileName="your-gecover.pdf"
+                                    >
+                                        {({ blob, url, loading, error }) => (
+                                            <Button 
+                                                variant="contained" 
+                                                color="primary"
+                                                sx={{ 
+                                                  backgroundColor: '#ec4899', 
+                                                  color: 'white',
+                                                  '&:hover': {
+                                                      backgroundColor: '#bf3985',
+                                                  },
+                                                }}
+                                                style={{ marginRight: '10px' }}
+                                                disabled={loading}
+                                            >
+                                                {loading ? 'Loading document...' : 'Download PDF'}
+                                            </Button>
+                                        )}
+                                    </PDFDownloadLink>
+                                    <Button 
+                                        variant="contained" 
+                                        color="secondary" 
+                                        onClick={handleDownload}
+                                    >
+                                        Download txt
+                                    </Button>
+                                </Box>
+                            )}
                             </div>
                         </div>
                     </div>
