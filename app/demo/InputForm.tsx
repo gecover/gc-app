@@ -304,7 +304,7 @@ export default function InputForm({ session, userName }: Props) {
                               />
                             </div>
                               {paragraph && (
-                                <Box display="flex" justifyContent="center" alignItems="center" spacing={2}>
+                                <Box display="flex" justifyContent="center" alignItems="center">
                                     <PDFDownloadLink
                                         document={
                                             <PDFDocument
