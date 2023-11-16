@@ -17,3 +17,7 @@
 .logo {
   @apply cursor-pointer rounded-full transform duration-100 ease-in-out;
 }
+
+.logo:focus {
+  @apply outline-none ring-2 ring-pink-500 ring-opacity-50;
+}

@@ -1,5 +1,6 @@
 'use client';
-import { Card, Grid, TextField, Button, Typography } from '@mui/material';
+import { Card, Grid, TextField, Button,  Typography } from '@mui/material';
+import {FormControl, FormLabel, Input, FormHelperText } from '@mui/joy'
 import FileDrop from '../../components/ui/FileDrop';
 import PDFDocument from '../../components/ui/PDF/PDFDocument';
 import React, { useState, ChangeEvent } from 'react';
@@ -46,11 +47,16 @@ export default function InputForm({ session, userName }: Props) {
   const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
   const [fileIcon, setFileIcon] = useState('X'); // 'X' or 'check'
   const [urlIcon, setUrlIcon] = useState('X'); 
-
-
   
   const [paragraphB, setParagraphB] = useState<string>('');
+  const label_style = {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    width: '100%',
+    color: 'red'
 
+  }
   
   const handleFileChange = async (file: File) => {
     setFile(file);
@@ -211,21 +217,55 @@ export default function InputForm({ session, userName }: Props) {
                 <Link className="font-black text-pink-500 text-xl text-center" href="/how-to"> first time user instructions </Link>
 
                 <div className="mt-8">
-                    <div className="border border-pink-500 border-opacity-50 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
+                    <div className="border-2 border-pink-500 border-opacity-70 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
                         <div className="space-y-6">
                             <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
+                          
                             <TextField 
                                 fullWidth 
                                 label="Enter Job Posting URL" 
                                 variant="outlined" 
+                                className="no-outline"
                                 onChange={handleUrlChange}
-                                style={{
+                                multiline={true}
+
+                                autoComplete='off'
+
+                                sx={{
                                   color: 'white',
-                                }}
-                                className="my-textfield no-tailwind-focus-ring"
-                                InputLabelProps={{
-                                    className: "text-white",
-                                    classes: { focused: "text-white" }
+                                  opacity: 1,
+                                  boxShadow: 0,
+                                 
+
+                                  '& .MuiInputBase-root': {
+                                    color: 'white',
+                                  },
+                                  "& input": {
+                                    color: 'white',
+                                  },
+                                  "& .MuiFormLabel-root": {
+                                    color: 'white',
+                                  },
+                                  
+                                  '& label.Mui-focused': {
+                                    color: 'white', 
+                                    
+                                  },
+                                  '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                      borderColor: 'white',
+                                      padding: -0.5, 
+                                      color: 'white',
+                                    },
+                                    '&:hover fieldset': {
+                                      borderColor: 'white', 
+                                      color: 'white',
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                      borderColor: 'white', 
+                                      color: 'white',
+                                    }
+                                  }
                                 }}
                                 InputProps={{
                                   endAdornment: (
@@ -233,25 +273,8 @@ export default function InputForm({ session, userName }: Props) {
                                       {urlIcon === 'check' ? <CheckIcon style={{ color: 'green' }} /> : <CloseIcon style={{ color: 'white' }} />}
                                     </InputAdornment>
                                   ),
-                                  className: "text-white",
-                                  classes: { notchedOutline: "border-white" }
                                 }}
-                                sx={{
-                                    '& label.Mui-focused': {
-                                      color: 'white', 
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                      '& fieldset': {
-                                        borderColor: 'white', 
-                                      },
-                                      '&:hover fieldset': {
-                                        borderColor: 'white', 
-                                      },
-                                      '&.Mui-focused fieldset': {
-                                        borderColor: 'white', 
-                                      },
-                                    },
-                                }}
+                                
                             />
                             <div className="flex justify-center">
                                 <Button 

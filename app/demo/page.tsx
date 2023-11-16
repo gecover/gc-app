@@ -20,10 +20,18 @@ export default async function GenerateCoverLetter() {
   if (!userDetails) {
     return redirect('/signin');
   }
-  let name = ''
-  if (userDetails.full_name){
-    name = userDetails.full_name
+  
+
+  let name = 'you need to enter your name in account'
+  try{
+    if (userDetails.full_name){
+      name = userDetails.full_name
+    }
+  } catch {
+    // todo: add a redirect to /account paired with an error message to user.
+    console.error("user needs to input their name on the account.")
   }
+  
 
   return (
     <div>
