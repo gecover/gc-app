@@ -7,53 +7,70 @@ export default function Page() {
       <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-12 lg:px-8">
         <div className="flex flex-col sm:flex sm:flex-col align-center justify-center">
           <h1 className="text-4xl font-extrabold text-white  sm:text-4xl">
-            How to Generate Your First Gecover
+            <span className="underline">How to Generate Your First Gecover</span>
           </h1>
           <Box className="">
-             <p className='pt-4 text-lg'>1 - Sign in to your Gecover account. 
-              <br></br>
-              <sub>
-                <span className="underline">Note:</span> If you do not have an account, you can register using your email or one of our providers.
-              </sub>
-            </p>
+            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">1 - Sign in to your GeCover account</h2>
+            <sub>
+              <span className="underline">Note:</span> If you do not have an account, you can register using your email or one of our providers.
+            </sub>
             <Image 
               src="/tutorial-signin.png" 
-              alt="Description of the image" 
+              alt="Image on how to sign in." 
               width={800}
               height={600}
             />
-            <p className='pt-4 text-lg'>2 - Navigate to Tutorial</p>
+            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">2 - Navigate to Tutorial</h2>
             <Image 
               src="/tutorial-tutorial.png" 
-              alt="Description of the image" 
+              alt="Image for accessing tutorials page." 
               width={800}
               height={600}
             />
-            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl"> Web Browser: </h2>
-            <p className='pt-4 text-lg'> 3: Upload your Resume. 
-            <br></br>
+            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">3 - Upload your Resume to Gecover</h2>
             <sub>
-              <span className="underline">Note:</span> Currently we only support PDF format.
+              <span className="underline">Note:</span> Currently we only support PDF format. More soon.
             </sub>
-            </p>
-
-             <p className='pt-4 text-lg'> 4: Upload the LinkedIn link to the job posting(currently working on making this easier) </p>
-             <p className='pt-4 text-lg'> 4.1: Go to LinkedIn jobs </p>
-             <p className='pt-4 text-lg'> 4.2: Click on the job you want to apply to </p>
-             <p className='pt-4 text-lg'> 4.3: Once previewing the job, click the job title to be brought to the job page </p>
-             <p className='pt-4 text-lg'> 4.4: Copy this URL and paste it in GeCover </p>
-             <p className='pt-4 text-lg'> 5: Generate PDF! </p>
-
-             <h2 className="text-2xl pt-8 font-extrabold text-white  sm:text-2xl"> On mobile </h2>
-             <p className='pt-4 text-lg'> 3: Upload your PDF </p>
-             <p className='pt-4 text-lg'> 4: Find your job on the LinkedIn App </p>
-             <p className='pt-4 text-lg'> 5: In the three dots in the top right, click "share via" and copy the link </p>
-             <p className='pt-4 text-lg'> 6: Paste that into notes, and copy out just the link </p>
-             <p className='pt-4 text-lg'> 7: Upload your link into GeCover </p>
-             <p className='pt-4 text-lg'> 8: Generate your PDF! </p>
+            <h3 className="pt-8 font-extrabold text-white">3.1 - Select File or Drag and Drop</h3>
+            <sub>
+              When your resume has been uploaded properly, you will see a green checkmark.
+            </sub>
+            <Image 
+              src="/tutorial-pdf-upload.png" 
+              alt="Image for Uploading a PDF" 
+              width={800}
+              height={600}
+            />
+            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">4 - Upload Job Posting Link/URL to GeCover</h2>
+            <sub>
+              <span className="underline">Note:</span> Currently we only support LinkedIn Job Postings.
+            </sub>
+            <h3 className="pt-8 font-extrabold text-white">4.1 - Go to LinkedIn Jobs</h3>
+            <h3 className="pt-8 font-extrabold text-white">4.2 - Find a Job</h3>
+            <h3 className="pt-8 font-extrabold text-white">4.3 - Once Previewing the Job, click the title to be brought to the Job Page</h3>
+            <h3 className="pt-8 font-extrabold text-white">4.4 - Copy Link/URL and paste it in GeCover</h3>
+            <sub>
+              <span className="underline">Note:</span> <b>On mobile</b>, you must paste the link in a notes file and copy the link from the message.
+            </sub>
+            <Image 
+              src="/tutorial-linkedin.png" 
+              alt="Image for Uploading a PDF" 
+              width={800}
+              height={600}
+            />
+            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">5 - Generate Your First GeCover!</h2>
+            <sub>
+              <span className="underline">Note:</span> Processing time is approximately 30 seconds. This can sometimes be longer due to current rate limitations.
+            </sub>
+            <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">6 - Download your GeCover as a PDF or textfile</h2>
+            <Image 
+              src="/tutorial-generate-pdf.png" 
+              alt="Image for Uploading a PDF" 
+              width={800}
+              height={600}
+            />
           </Box>
         </div>
-        
       </div>
     </section>
   );
