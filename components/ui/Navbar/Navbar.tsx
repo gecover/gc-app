@@ -37,19 +37,17 @@ export default async function Navbar() {
                   Demo
                 </Link>
               )}
-              {user && (
-                <Link href="/how-to" className={s.link}>
-                  How to
-                </Link>
-              )}
             </nav>
           </div>
           <div className="flex justify-end flex-1 space-x-8">
+            <Link href="/tutorial" className={s.link}>
+              Tutorial
+            </Link>
             {user ? (
               <SignOutButton />
             ) : (
               <Link href="/signin" className={s.link}>
-                Sign in
+                Sign In
               </Link>
             )}
           </div>
