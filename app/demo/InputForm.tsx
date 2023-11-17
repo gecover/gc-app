@@ -214,7 +214,7 @@ export default function InputForm({ session, userName }: Props) {
                     Generate Tailored Cover Letters
                 </h1>
                 <h1 className="text-lg pt-4 font-extrabold text-white sm:text-center sm:text-xl">
-                    For a smooth start, please take a moment to explore our <Link className="font-black text-pink-500 text-xl text-center" href="/how-to">helpful guide for first-time users. </Link>
+                    For a smooth start, please take a moment to explore our <Link className="font-black text-pink-500 text-xl text-center" href="/tutorial">helpful guide for first-time users. </Link>
                 </h1>
                 <div className="mt-8">
                     <div className="border-2 border-pink-500 border-opacity-70 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
