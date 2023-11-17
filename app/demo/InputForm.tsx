@@ -276,7 +276,21 @@ export default function InputForm({ session, userName }: Props) {
                                 }}
                                 
                             />
-                            <div className="flex justify-center">
+                            <div className="flex justify-center sm:justify-end ">
+                                <Checkbox
+                                  color="neutral"
+                                  label="Altman Mode"
+                                  size="lg"
+                                  variant="outlined"
+                                  checked={model === 'altman' ? true : false}
+                                  onChange={handleAltmanChange} 
+                                  style={{
+                                    color: 'white',
+                                    alignSelf:'center',
+                                  }}
+                                />
+                              </div>
+                              <div className="flex justify-center">
                                 <Button 
                                     variant="contained" 
                                     onClick={handleSubmit}
@@ -289,21 +303,9 @@ export default function InputForm({ session, userName }: Props) {
                                 >
                                     Generate
                                 </Button>
-                                
-                            </div>
-                            <div className="flex justify-end " style={{ marginTop: '-30px' }}>
-                              <Checkbox
-                                color="neutral"
-                                label="Sam Altman Mode"
-                                size="lg"
-                                variant="outlined"
-                                checked={model === 'altman' ? true : false}
-                                onChange={handleAltmanChange} 
-                                style={{
-                                  color: 'white',
-                                }}
-                              />
-                            </div>
+                              </div>
+                              
+                              
                               {paragraph && (
                                 <Box display="flex" justifyContent="center" alignItems="center">
                                     <PDFDownloadLink
@@ -322,10 +324,10 @@ export default function InputForm({ session, userName }: Props) {
                                                 variant="contained" 
                                                 color="primary"
                                                 sx={{ 
-                                                  backgroundColor: '#ec4899', 
+                                                  backgroundColor: '#f472b6', 
                                                   color: 'white',
                                                   '&:hover': {
-                                                      backgroundColor: '#bf3985',
+                                                      backgroundColor: '#EC4899',
                                                   },
                                                 }}
                                                 style={{ marginRight: '10px' }}
@@ -337,7 +339,12 @@ export default function InputForm({ session, userName }: Props) {
                                     </PDFDownloadLink>
                                     <Button 
                                         variant="contained" 
-                                        color="secondary" 
+                                        sx={{                                         
+                                         backgroundColor: '#57534E',
+                                         '&:hover': {
+                                          backgroundColor: '#EC4899',
+                                      }, 
+                                      }}
                                         onClick={handleDownload}
                                     >
                                         Download txt
