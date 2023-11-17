@@ -12,7 +12,7 @@ export default function Page() {
           <Box className="">
             <h2 className="text-2xl pt-8 font-extrabold text-white sm:text-2xl">1 - Sign in to your GeCover account</h2>
             <sub>
-              <span className="underline">Note:</span> If you do not have an account, you can register using your email or one of our providers.
+              <span className="underline">Note:</span> If you do not have an account, you can register using your email or through one of our providers.
             </sub>
             <Image 
               src="/tutorial-signin.png" 
