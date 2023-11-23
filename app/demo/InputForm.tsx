@@ -17,6 +17,8 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Session } from '@supabase/supabase-js';
 import Checkbox from '@mui/joy/Checkbox';
 
+import { useGeCover } from '../../contexts/GeCoverContext';
+
 interface Props {
   session: Session;
   userName: string;
@@ -50,6 +52,14 @@ export default function InputForm({ session, userName }: Props) {
   const [urlIcon, setUrlIcon] = useState('X'); 
   const [model, setModel] = useState('normal'); 
 
+  const { setGeCoverText } = useGeCover();
+
+  const handleEditGeCover = () => {
+    setGeCoverText(paragraph);
+    // Redirect to the QuillEditor page
+    window.location.href = '/editor'; 
+  };
+
   const [paragraphB, setParagraphB] = useState<string>('');
   const label_style = {
     textOverflow: 'ellipsis',
@@ -74,11 +84,10 @@ export default function InputForm({ session, userName }: Props) {
       formData.append('type', 'application/pdf');
 
       try {
-        resumeList = await axios.post(`${process.env.API_URL}/read_pdf/`, formData, {
+        resumeList = await axios.post(`http://localhost:5000/read_pdf/`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization' : `Bearer ${session.access_token}`
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         });
         const length = resumeList.data.contents.length;
         if (length > 5){
@@ -121,19 +130,26 @@ export default function InputForm({ session, userName }: Props) {
     console.log('URL RECEIVED', url);
 
     const linkedInJobRegex = /^https:\/\/www\.linkedin\.com\/jobs\/view\/.*$/;
+    const indeedJobRegex = /jk=[a-f0-9]+/i;
     console.log('URL;', event.target.value)
     console.log('TEST RGEX', linkedInJobRegex.test(event.target.value))
     if (linkedInJobRegex.test(event.target.value)) {
       setUrl(event.target.value);
       setOpen(true);
       setColor('success');
-      setBanner(`URL format valid.`);
+      setBanner(`LinkedIn URL format valid.`);
+      setUrlIcon('check');
+    } else if (indeedJobRegex.test(event.target.value)) {
+      setUrl(event.target.value);
+      setOpen(true);
+      setColor('success');
+      setBanner('Indeed URL format valid.');
       setUrlIcon('check');
     } else {
       setUrlIcon('X');
       setOpen(true);
       setColor('danger');
-      setBanner(`It appears the URL provided has an invalid format. We support linked post of the form https://www.linkedin.com/jobs/view/***********.`);
+      setBanner(`It appears the URL provided has an invalid format. We support linked post of the form https://www.linkedin.com/jobs/view/*********** or Indeed job URLs with the jk parameter.`);
     }
   };
 
@@ -145,11 +161,13 @@ export default function InputForm({ session, userName }: Props) {
     let urlList = null;
     if ((urlIcon == 'check')) {
       try {
-        urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
-          { url },
-          {headers: {
-            'Authorization' : `Bearer ${session.access_token}`
-        }});
+        urlList = await axios.post(`http://localhost:5000/extract_url/`, 
+          { url }
+        //   ,
+        //   {headers: {
+        //     'Authorization' : `Bearer ${session.access_token}`
+        // }}
+        );
   
         if (!urlList.data.contents) {
           setOpen(true);
@@ -167,16 +185,17 @@ export default function InputForm({ session, userName }: Props) {
               // Create a cancel token source
               const CancelToken = axios.CancelToken;
               const source = CancelToken.source();
-              const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
+              const generatedParagraphs = await axios.post(`http://localhost:5000/generate_paragraphs/`, {
               requirements: urlList.data.contents,
               resume_documents: resumeData.contents,
               model: {'model' : model},
               }, {
                   cancelToken: source.token,
-                  timeout: TIMEOUT_DURATION,
-                  headers: {
-                    'Authorization' : `Bearer ${session.access_token}`
-                  }
+                  timeout: TIMEOUT_DURATION
+                  // ,
+                  // headers: {
+                  //   'Authorization' : `Bearer ${session.access_token}`
+                  // }
               });
               // TODO - FIX CANCEL TOKEN
               source.cancel('Request was cancelled by the user.');
@@ -349,6 +368,13 @@ export default function InputForm({ session, userName }: Props) {
                                     >
                                         Download txt
                                     </Button>
+                                    <Button 
+                                      variant="contained" 
+                                      sx={{ backgroundColor: '#57534E', '&:hover': { backgroundColor: '#EC4899' } }}
+                                      onClick={handleEditGeCover}
+                                    >
+                                      Edit GeCover
+                                    </Button>
                                 </Box>
                             )}
                             </div>
@@ -359,4 +385,4 @@ export default function InputForm({ session, userName }: Props) {
     </section>
     </>
   );
-}
+};
