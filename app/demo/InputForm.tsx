@@ -1,7 +1,8 @@
 'use client';
 import {TextField, Button} from '@mui/material';
-import {FormControl, FormLabel, Input, FormHelperText } from '@mui/joy'
 import FileDrop from '../../components/ui/FileDrop';
+import Editor from '../../components/ui/Editor';
+
 import PDFDocument from '../../components/ui/PDF/PDFDocument';
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
@@ -16,6 +17,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Session } from '@supabase/supabase-js';
 import Checkbox from '@mui/joy/Checkbox';
+import Card from '@mui/joy/Card';
+import Stepper from '@mui/joy/Stepper';
+import Step from '@mui/joy/Step';
+import StepButton from '@mui/joy/StepButton';
+import StepIndicator from '@mui/joy/StepIndicator';
+import Check from '@mui/icons-material/Check';
+
 
 interface Props {
   session: Session;
@@ -34,6 +42,9 @@ type ResponseContent = {
   contents: string[];
 };
 
+const steps = ['Upload Resume', 'Paste URL', 'Generate'];
+
+
 export default function InputForm({ session, userName }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string>('');
@@ -44,11 +55,13 @@ export default function InputForm({ session, userName }: Props) {
   const [open, setOpen] = React.useState(false);
   const [color, setColor] = React.useState<SnackbarProps['color']>('primary');
   const [banner, setBanner] = React.useState('');
-  const [resumeData, setResumeData] = useState<ResponseContent>({ contents: [] });
+  const [resumeData, setResumeData] = useState<string[]>([]);
   const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
   const [fileIcon, setFileIcon] = useState('X'); // 'X' or 'check'
   const [urlIcon, setUrlIcon] = useState('X'); 
   const [model, setModel] = useState('normal'); 
+  const [activeStep, setActiveStep] = React.useState(0);
+
 
   const [paragraphB, setParagraphB] = useState<string>('');
   const label_style = {
@@ -73,22 +86,25 @@ export default function InputForm({ session, userName }: Props) {
       formData.append('file', file);
       formData.append('type', 'application/pdf');
 
+
       try {
         resumeList = await axios.post(`${process.env.API_URL}/read_pdf/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization' : `Bearer ${session.access_token}`
+            // 'Authorization' : `Bearer ${session.access_token}`
           },
         });
         const length = resumeList.data.contents.length;
+        console.log(resumeList.data)
         if (length > 5){
-          setResumeData(resumeList.data);
+          const data: Array<string> = resumeList.data.contents
+          setResumeData(data);
           setOpen(true);
           setColor('success');
           setBanner(`You loaded a pdf with ${length} chunks.`);
           setFileIcon('check');
         } else {
-          setResumeData(resumeList.data);
+          setResumeData(resumeList.data.contents);
           setOpen(true);
           setColor('danger');
           setBanner(`You loaded a pdf with ${length} chunks. Parsing did not work well, and you likely will not get good results.`);
@@ -169,7 +185,7 @@ export default function InputForm({ session, userName }: Props) {
               const source = CancelToken.source();
               const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
               requirements: urlList.data.contents,
-              resume_documents: resumeData.contents,
+              resume_documents: resumeData,
               model: {'model' : model},
               }, {
                   cancelToken: source.token,
@@ -206,7 +222,7 @@ export default function InputForm({ session, userName }: Props) {
   return (
     <>
     {isLoading && <LoadingOverlay />}
-    <section className="bg-black">
+    <section className="bg-emerald-950">
       <Snackbar color={color} open={open} autoHideDuration={1000} > {banner} </Snackbar>
         <div className="max-w-6xl py-8 px-4 mx-auto sm:py-16 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center">
@@ -216,145 +232,219 @@ export default function InputForm({ session, userName }: Props) {
                 <h1 className="text-lg pt-4 font-extrabold text-white sm:text-center sm:text-xl">
                     For a smooth start, please take a moment to explore our <Link className="font-black text-pink-500 text-xl text-center" href="/tutorial">helpful guide for first-time users. </Link>
                 </h1>
-                <div className="mt-8">
-                    <div className="border-2 border-pink-500 border-opacity-70 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
-                        <div className="space-y-6">
-                            <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
+
+                <Card sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                  <Stepper sx={{ width: '100%' }}>
+                  {steps.map((step, index) => (
+                      <Step
+                        key={step}
+                        indicator={
+                          <StepIndicator
+                            variant={activeStep <= index ? 'soft' : 'solid'}
+                            color={activeStep < index ? 'neutral' : 'primary'}
+                          >
+                            {activeStep <= index ? index + 1 : <Check />}
+                          </StepIndicator>
+                        }
+                        sx={{
+                          '&::after': {
+                            ...(activeStep > index &&
+                              index !== 2 && { bgcolor: 'primary.solidBg' }),
+                          },
+                        }}
+                      >
+                        <StepButton onClick={() => setActiveStep(index)}>{step}</StepButton>
+                      </Step>
+                    ))}
+                  </Stepper>
+                </Card>
+                {activeStep == 0 && 
+                <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", alignItems: 'center'}}>
+                  <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
+                    
+                  <Editor chunks={resumeData}/>
+                  <Button  sx={{ marginTop: 'auto', alignSelf: 'flex-end'}} onClick={() => setActiveStep(activeStep + 1)}> Next </Button>
+                </Card>
+                }
+                {activeStep == 1 && 
+                <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
+                  <TextField 
+                      label="Enter Job Posting URL" 
+                      variant="outlined" 
+                      className="no-outline"
+                      onChange={handleUrlChange}
+                      autoComplete='off'
+
+                      sx={{
+                        color: 'white',
+                        opacity: 1,
+                        boxShadow: 0,
+                        width: '80%',
+
+                        '& .MuiInputBase-root': {
+                          color: 'white',
+                        },
+                        "& input": {
+                          color: 'white',
+                        },
+                        "& .MuiFormLabel-root": {
+                          color: 'white',
+                        },
+                        
+                        '& label.Mui-focused': {
+                          color: 'white', 
                           
-                            <TextField 
-                                fullWidth 
-                                label="Enter Job Posting URL" 
-                                variant="outlined" 
-                                className="no-outline"
-                                onChange={handleUrlChange}
-                                multiline={true}
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: 'white',
+                            padding: -0.5, 
+                            color: 'white',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'white', 
+                            color: 'white',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'white', 
+                            color: 'white',
+                          }
+                        }
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {urlIcon === 'check' ? <CheckIcon style={{ color: 'green' }} /> : <CloseIcon style={{ color: 'white' }} />}
+                          </InputAdornment>
+                        ),
+                      }}     
+                    />
+                  <Editor chunks={resumeData}/>
+                  <Button  sx={{ marginTop: 'auto', alignSelf: 'flex-end'}} onClick={() => setActiveStep(activeStep + 1)}> Next </Button>
+                </Card>
+                }
 
-                                autoComplete='off'
-
-                                sx={{
-                                  color: 'white',
-                                  opacity: 1,
-                                  boxShadow: 0,
-                                 
-
-                                  '& .MuiInputBase-root': {
-                                    color: 'white',
-                                  },
-                                  "& input": {
-                                    color: 'white',
-                                  },
-                                  "& .MuiFormLabel-root": {
-                                    color: 'white',
-                                  },
-                                  
-                                  '& label.Mui-focused': {
-                                    color: 'white', 
-                                    
-                                  },
-                                  '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                      borderColor: 'white',
-                                      padding: -0.5, 
-                                      color: 'white',
-                                    },
-                                    '&:hover fieldset': {
-                                      borderColor: 'white', 
-                                      color: 'white',
-                                    },
-                                    '&.Mui-focused fieldset': {
-                                      borderColor: 'white', 
-                                      color: 'white',
-                                    }
-                                  }
-                                }}
-                                InputProps={{
-                                  endAdornment: (
-                                    <InputAdornment position="end">
-                                      {urlIcon === 'check' ? <CheckIcon style={{ color: 'green' }} /> : <CloseIcon style={{ color: 'white' }} />}
-                                    </InputAdornment>
-                                  ),
-                                }}
-                                
-                            />
-                            <div className="flex justify-center sm:justify-end ">
-                                <Checkbox
-                                  color="neutral"
-                                  label="Altman Mode"
-                                  size="lg"
-                                  variant="outlined"
-                                  checked={model === 'altman' ? true : false}
-                                  onChange={handleAltmanChange} 
+                {activeStep == 2 && 
+                  <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
+                    <Button 
+                                  variant="contained" 
+                                  onClick={handleSubmit}
                                   style={{
-                                    color: 'white',
-                                    alignSelf:'center',
+                                    backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                                    color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
+                                    cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
                                   }}
-                                />
-                              </div>
-                              <div className="flex justify-center">
-                                <Button 
-                                    variant="contained" 
-                                    onClick={handleSubmit}
-                                    style={{
-                                      backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
-                                      color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
-                                      cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                                    }}
-                                    disabled={fileIcon !== 'check' || urlIcon !== 'check'}
-                                >
-                                    Generate
-                                </Button>
-                              </div>
-                              
-                              
-                              {paragraph && (
-                                <Box display="flex" justifyContent="center" alignItems="center">
-                                    <PDFDownloadLink
-                                        document={
-                                            <PDFDocument
-                                                userName={userName}
-                                                bodyParagraph={paragraph}
-                                                jobTitle={jobName}
-                                                companyName={companyName}
-                                            />
-                                        }
-                                        fileName="your-gecover.pdf"
-                                    >
-                                        {({ blob, url, loading, error }) => (
-                                            <Button 
-                                                variant="contained" 
-                                                color="primary"
-                                                sx={{ 
-                                                  backgroundColor: '#f472b6', 
-                                                  color: 'white',
-                                                  '&:hover': {
-                                                      backgroundColor: '#EC4899',
-                                                  },
-                                                }}
-                                                style={{ marginRight: '10px' }}
-                                                disabled={loading}
-                                            >
-                                                {loading ? 'Loading document...' : 'Download PDF'}
-                                            </Button>
-                                        )}
-                                    </PDFDownloadLink>
-                                    <Button 
-                                        variant="contained" 
-                                        sx={{                                         
-                                         backgroundColor: '#57534E',
-                                         '&:hover': {
-                                          backgroundColor: '#EC4899',
-                                      }, 
-                                      }}
-                                        onClick={handleDownload}
-                                    >
-                                        Download txt
-                                    </Button>
-                                </Box>
-                            )}
-                            </div>
-                        </div>
-                    </div>
+                                  disabled={fileIcon !== 'check' || urlIcon !== 'check'}
+                              >
+                                  Generate
+                              </Button>
+                  </Card>
+                }
+                
+
+
+                <div className="flex flex-row justify-center items-center pt-24">
+                
+                  <div className="">
+
+                    {/* {resumeData.contents.length == 0 && (
+                      <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
+                    )} 
+                    {resumeData.contents.length != 0 && (
+                      <>
+                        
+                      </>
+                    )}   */}
+                  </div>
+                  <div className="flex justify-center items-center w-1/2">
+                    
                 </div>
+              </div>
+
+              {/* <div className="mt-8">
+                  <div className="border-2 border-pink-500 border-opacity-70 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
+                      <div className="space-y-6">
+                        
+                          
+                          <div className="flex justify-center sm:justify-end ">
+                              <Checkbox
+                                color="neutral"
+                                label="Altman Mode"
+                                size="lg"
+                                variant="outlined"
+                                checked={model === 'altman' ? true : false}
+                                onChange={handleAltmanChange} 
+                                style={{
+                                  color: 'white',
+                                  alignSelf:'center',
+                                }}
+                              />
+                            </div>
+                            <div className="flex justify-center">
+                              <Button 
+                                  variant="contained" 
+                                  onClick={handleSubmit}
+                                  style={{
+                                    backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                                    color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
+                                    cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                                  }}
+                                  disabled={fileIcon !== 'check' || urlIcon !== 'check'}
+                              >
+                                  Generate
+                              </Button>
+                            </div>
+                            
+                            
+                            {paragraph && (
+                              <Box display="flex" justifyContent="center" alignItems="center">
+                                  <PDFDownloadLink
+                                      document={
+                                          <PDFDocument
+                                              userName={userName}
+                                              bodyParagraph={paragraph}
+                                              jobTitle={jobName}
+                                              companyName={companyName}
+                                          />
+                                      }
+                                      fileName="your-gecover.pdf"
+                                  >
+                                      {({ blob, url, loading, error }) => (
+                                          <Button 
+                                              variant="contained" 
+                                              color="primary"
+                                              sx={{ 
+                                                backgroundColor: '#f472b6', 
+                                                color: 'white',
+                                                '&:hover': {
+                                                    backgroundColor: '#EC4899',
+                                                },
+                                              }}
+                                              style={{ marginRight: '10px' }}
+                                              disabled={loading}
+                                          >
+                                              {loading ? 'Loading document...' : 'Download PDF'}
+                                          </Button>
+                                      )}
+                                  </PDFDownloadLink>
+                                  <Button 
+                                      variant="contained" 
+                                      sx={{                                         
+                                        backgroundColor: '#57534E',
+                                        '&:hover': {
+                                        backgroundColor: '#EC4899',
+                                    }, 
+                                    }}
+                                      onClick={handleDownload}
+                                  >
+                                      Download txt
+                                  </Button>
+                              </Box>
+                          )}
+                          </div>
+                      </div>
+                  </div> */}
+              </div>
             </div>
     </section>
     </>
