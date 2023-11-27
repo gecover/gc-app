@@ -1,7 +1,8 @@
 'use client';
-import {TextField, Button} from '@mui/material';
+import {TextField} from '@mui/material';
 import FileDrop from '../../components/ui/FileDrop';
 import Editor from '../../components/ui/Editor';
+import Button from '@mui/joy/Button';
 
 import PDFDocument from '../../components/ui/PDF/PDFDocument';
 import React, { useState, ChangeEvent } from 'react';
@@ -23,6 +24,7 @@ import Step from '@mui/joy/Step';
 import StepButton from '@mui/joy/StepButton';
 import StepIndicator from '@mui/joy/StepIndicator';
 import Check from '@mui/icons-material/Check';
+import { Grid, Stack } from '@mui/joy';
 
 
 interface Props {
@@ -56,7 +58,7 @@ export default function InputForm({ session, userName }: Props) {
   const [color, setColor] = React.useState<SnackbarProps['color']>('primary');
   const [banner, setBanner] = React.useState('');
   const [resumeData, setResumeData] = useState<string[]>([]);
-  const [urlData, setUrlData] = useState<ResponseContent>({ contents: [] });
+  const [urlData, setUrlData] = useState<string[]>([]);
   const [fileIcon, setFileIcon] = useState('X'); // 'X' or 'check'
   const [urlIcon, setUrlIcon] = useState('X'); 
   const [model, setModel] = useState('normal'); 
@@ -75,6 +77,11 @@ export default function InputForm({ session, userName }: Props) {
   const handleAltmanChange = (event: ChangeEvent<HTMLInputElement>) => {
     setModel(event.target.checked ? 'altman' : 'normal');
   };
+  
+  const handleRetry = () => {
+    setResumeData([])
+    setFileIcon('X')
+  }
 
   const handleFileChange = async (file: File) => {
     setFile(file);
@@ -91,7 +98,7 @@ export default function InputForm({ session, userName }: Props) {
         resumeList = await axios.post(`${process.env.API_URL}/read_pdf/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            // 'Authorization' : `Bearer ${session.access_token}`
+            'Authorization' : `Bearer ${session.access_token}`
           },
         });
         const length = resumeList.data.contents.length;
@@ -153,6 +160,33 @@ export default function InputForm({ session, userName }: Props) {
     }
   };
 
+  const handleURLSubmit = async () => {
+    try {
+      const urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
+      { url },
+      {headers: {
+        'Authorization' : `Bearer ${session.access_token}`
+      }});
+      if (!urlList.data.contents) {
+        setOpen(true);
+        setColor('danger');
+        setBanner(`We didn't get your job requirements. Please note we only support LinkedIn from the direct job page currently.`);
+        setUrlIcon('X');
+      } else {
+        setOpen(true);
+        setColor('success');
+        setBanner(`Successfully loaded ${urlList.data.contents.length} job requirements.`);
+        setUrlData(urlList.data.contents);
+        setJobName(urlList.data.job_title.trim());
+        setCompanyName(urlList.data.company.trim());
+        setUrlIcon('check');
+      }
+    } 
+    catch (e) {
+      console.error(e);
+    }
+  }
+
   const handleSubmit = async () => {
     const TIMEOUT_DURATION = 150000; 
     setIsLoading(true);
@@ -161,68 +195,50 @@ export default function InputForm({ session, userName }: Props) {
     let urlList = null;
     if ((urlIcon == 'check')) {
       try {
-        urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
-          { url },
-          {headers: {
-            'Authorization' : `Bearer ${session.access_token}`
-        }});
-  
-        if (!urlList.data.contents) {
+        if (urlData.length == 0) {
           setOpen(true);
           setColor('danger');
-          setBanner(`We didn't get your job requirements. Please note we only support LinkedIn from the direct job page currently.`);
+          setBanner(`We didn't get your job requirements. Please head to step 2.`);
           setUrlIcon('X');
-        } else {
+          throw new Error("no job requirements");
+        } 
+        if (resumeData.length == 0) {
           setOpen(true);
-          setColor('success');
-          setBanner(`Successfully loaded ${urlList.data.contents.length} job requirements.`);
-          setUrlIcon('check');
+          setColor('danger');
+          setBanner(`We didn't get your resume information. Please head to step 1.`);
+          setUrlIcon('X');
+          throw new Error("no resume information");
         }
-        if (resumeData) {
-          try {
-              // Create a cancel token source
-              const CancelToken = axios.CancelToken;
-              const source = CancelToken.source();
-              const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
-              requirements: urlList.data.contents,
-              resume_documents: resumeData,
-              model: {'model' : model},
-              }, {
-                  cancelToken: source.token,
-                  timeout: TIMEOUT_DURATION,
-                  headers: {
-                    'Authorization' : `Bearer ${session.access_token}`
-                  }
-              });
-              // TODO - FIX CANCEL TOKEN
-              source.cancel('Request was cancelled by the user.');
-              console.log(generatedParagraphs.data);
-              // console.log('FIORST PARA', generatedParagraphs.data.first_para)
-              // console.log('SECOND PARA', generatedParagraphs.data.second_para)
-              setParagraph(generatedParagraphs.data.para_A);
-          } catch (error) {
-              console.error('Error generating paragraphs:', error);
-          } finally {
-              setIsLoading(false);
-          }
-      } else {
-        console.log('Either resume list or URL list or both are not available.');
-        setIsLoading(false);
-        // TODO - IMPLEMENT ERROR HANDLING THROUGH WARNING COMPONENT PROVIDING INFO: RESUME INSUFFICIENT? URL UNPROCESSABLE?
-      }
-      setUrlData(urlList.data);
-      setJobName(urlList.data.job_title.trim());
-      setCompanyName(urlList.data.company.trim());
+        
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+        const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
+        requirements: urlData,
+        resume_documents: resumeData,
+        model: {'model' : model},
+        }, {
+            cancelToken: source.token,
+            timeout: TIMEOUT_DURATION,
+            headers: {
+              'Authorization' : `Bearer ${session.access_token}`
+            }
+        });
+        source.cancel('Request was cancelled by the user.');
+        console.log(generatedParagraphs.data);
+        setParagraph(generatedParagraphs.data.para_A);
+         
       } catch (error) {
         console.error('Error fetching URL:', error);
-      }
+      } finally {
+        setIsLoading(false);
+    }
     } 
   };
 
   return (
     <>
     {isLoading && <LoadingOverlay />}
-    <section className="bg-emerald-950">
+    <section className="bg-sky-950">
       <Snackbar color={color} open={open} autoHideDuration={1000} > {banner} </Snackbar>
         <div className="max-w-6xl py-8 px-4 mx-auto sm:py-16 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center">
@@ -233,7 +249,7 @@ export default function InputForm({ session, userName }: Props) {
                     For a smooth start, please take a moment to explore our <Link className="font-black text-pink-500 text-xl text-center" href="/tutorial">helpful guide for first-time users. </Link>
                 </h1>
 
-                <Card sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <Card sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '60%',  display: 'flex', justifySelf: 'center', alignSelf: 'center', justifyContent: 'center', alignItems: 'center'}}>
                   <Stepper sx={{ width: '100%' }}>
                   {steps.map((step, index) => (
                       <Step
@@ -258,16 +274,48 @@ export default function InputForm({ session, userName }: Props) {
                     ))}
                   </Stepper>
                 </Card>
-                {activeStep == 0 && 
+                {activeStep == 4 && 
                 <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", alignItems: 'center'}}>
                   <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
-                    
-                  <Editor chunks={resumeData}/>
-                  <Button  sx={{ marginTop: 'auto', alignSelf: 'flex-end'}} onClick={() => setActiveStep(activeStep + 1)}> Next </Button>
+                  <Editor chunks={resumeData} setChunks={setResumeData} />
+                  <Button onClick={() => setActiveStep(activeStep + 1)}> Next </Button>
+                  {/* <Button  sx={{ marginTop: 'auto', alignSelf: 'flex-end'}} onClick={() =>console.log(resumeData)}> Test </Button> */}
                 </Card>
                 }
-                {activeStep == 1 && 
-                <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
+                {activeStep == 0 && resumeData.length == 0 &&
+
+                <Grid container spacing={2} sx={{ flexGrow: 1, marginTop: 4, alignItems: 'center' }}>
+                  <Grid xs={4}>
+                  </Grid>
+                  <Grid xs={4}>
+                    <Card sx={{alignItems: 'center', justifyContent: 'center'}}>
+                      <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
+                    </Card>
+                  </Grid>
+                  <Grid xs={4}>
+                  </Grid>
+                </Grid>
+                
+                }
+                {activeStep == 0 && resumeData.length > 0 &&
+                <Grid container spacing={2} sx={{ flexGrow: 1, marginTop: 4 }}>
+                  <Grid xs={2}>
+                  </Grid>
+
+                  <Grid xs={8}>
+                   <Editor chunks={resumeData} setChunks={setResumeData} />
+                  </Grid>
+                  <Grid sx={{ justifySelf: 'center', alignSelf: 'center'}} xs={2}>
+                    <Card>
+                      <Button color='neutral' size='lg' variant='soft' onClick={handleRetry}> Retry PDF </Button>
+                     <Button color='primary' size='lg' variant='plain' onClick={() => setActiveStep(activeStep + 1)}> Done </Button>
+                    </Card>
+                   </Grid>
+              </Grid>
+                }
+                
+                {activeStep == 1 && urlData.length == 0 &&
+                <Card  sx={{ justifySelf: 'center', alignSelf: 'center', marginTop: '4rem', backgroundColor: 'whitesmoke', width: '80%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
                   <TextField 
                       label="Enter Job Posting URL" 
                       variant="outlined" 
@@ -276,176 +324,236 @@ export default function InputForm({ session, userName }: Props) {
                       autoComplete='off'
 
                       sx={{
-                        color: 'white',
+                        color: 'black',
                         opacity: 1,
                         boxShadow: 0,
                         width: '80%',
 
                         '& .MuiInputBase-root': {
-                          color: 'white',
+                          color: 'black',
                         },
                         "& input": {
-                          color: 'white',
+                          color: 'black',
                         },
                         "& .MuiFormLabel-root": {
-                          color: 'white',
+                          color: 'black',
                         },
                         
                         '& label.Mui-focused': {
-                          color: 'white', 
+                          color: 'black', 
                           
                         },
                         '& .MuiOutlinedInput-root': {
                           '& fieldset': {
-                            borderColor: 'white',
+                            borderColor: 'black',
                             padding: -0.5, 
-                            color: 'white',
+                            color: 'black',
                           },
                           '&:hover fieldset': {
-                            borderColor: 'white', 
-                            color: 'white',
+                            borderColor: 'black', 
+                            color: 'black',
                           },
                           '&.Mui-focused fieldset': {
-                            borderColor: 'white', 
-                            color: 'white',
+                            borderColor: 'black', 
+                            color: 'black',
                           }
                         }
                       }}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            {urlIcon === 'check' ? <CheckIcon style={{ color: 'green' }} /> : <CloseIcon style={{ color: 'white' }} />}
+                            {urlIcon === 'check' ? <CheckIcon style={{ color: 'green' }} /> : <CloseIcon style={{ color: 'black' }} />}
                           </InputAdornment>
                         ),
                       }}     
                     />
-                  <Editor chunks={resumeData}/>
-                  <Button  sx={{ marginTop: 'auto', alignSelf: 'flex-end'}} onClick={() => setActiveStep(activeStep + 1)}> Next </Button>
+                  <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
+                          style={{
+                            backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                            color: urlIcon !== 'check' ? 'white' : 'white', 
+                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          }}
+                          disabled={urlIcon !== 'check'} 
+                          onClick={handleURLSubmit}> 
+                          Submit 
+                  </Button>
+                  <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
+                          style={{
+                            backgroundColor: '#385E72',
+                            color: 'white', 
+                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          }}
+                          disabled
+                          onClick={() => setActiveStep(activeStep + 1)}> 
+                          Next 
+                  </Button>
                 </Card>
                 }
 
-                {activeStep == 2 && 
-                  <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
-                    <Button 
-                                  variant="contained" 
-                                  onClick={handleSubmit}
-                                  style={{
-                                    backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
-                                    color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
-                                    cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                                  }}
-                                  disabled={fileIcon !== 'check' || urlIcon !== 'check'}
-                              >
-                                  Generate
-                              </Button>
-                  </Card>
-                }
-                
+              {activeStep == 1 && urlData.length > 0 &&
+              <Stack direction='column'>
+                <Card  sx={{ justifySelf: 'center', alignSelf: 'center', marginTop: '4rem', backgroundColor: 'whitesmoke', width: '80%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
+                                    <TextField 
+                      label="Enter Job Posting URL" 
+                      variant="outlined" 
+                      className="no-outline"
+                      onChange={handleUrlChange}
+                      autoComplete='off'
 
+                      sx={{
+                        color: 'black',
+                        opacity: 1,
+                        boxShadow: 0,
+                        width: '80%',
 
-                <div className="flex flex-row justify-center items-center pt-24">
-                
-                  <div className="">
-
-                    {/* {resumeData.contents.length == 0 && (
-                      <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
-                    )} 
-                    {resumeData.contents.length != 0 && (
-                      <>
+                        '& .MuiInputBase-root': {
+                          color: 'black',
+                        },
+                        "& input": {
+                          color: 'black',
+                        },
+                        "& .MuiFormLabel-root": {
+                          color: 'black',
+                        },
                         
-                      </>
-                    )}   */}
-                  </div>
-                  <div className="flex justify-center items-center w-1/2">
-                    
-                </div>
-              </div>
-
-              {/* <div className="mt-8">
-                  <div className="border-2 border-pink-500 border-opacity-70 rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900 p-6">
-                      <div className="space-y-6">
-                        
+                        '& label.Mui-focused': {
+                          color: 'black', 
                           
-                          <div className="flex justify-center sm:justify-end ">
-                              <Checkbox
-                                color="neutral"
-                                label="Altman Mode"
-                                size="lg"
-                                variant="outlined"
-                                checked={model === 'altman' ? true : false}
-                                onChange={handleAltmanChange} 
-                                style={{
-                                  color: 'white',
-                                  alignSelf:'center',
-                                }}
-                              />
-                            </div>
-                            <div className="flex justify-center">
-                              <Button 
-                                  variant="contained" 
-                                  onClick={handleSubmit}
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: 'black',
+                            padding: -0.5, 
+                            color: 'black',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'black', 
+                            color: 'black',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'black', 
+                            color: 'black',
+                          }
+                        }
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {urlIcon === 'check' ? <CheckIcon style={{ color: 'green' }} /> : <CloseIcon style={{ color: 'black' }} />}
+                          </InputAdornment>
+                        ),
+                      }}     
+                    />
+                  <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
+                          style={{
+                            backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                            color: urlIcon !== 'check' ? 'white' : 'white', 
+                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          }}
+                          disabled={urlIcon !== 'check'} 
+                          onClick={handleURLSubmit}> 
+                          Submit 
+                  </Button>
+                  <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
+                          style={{
+                            backgroundColor: '#6AABD2',
+                            color: 'white', 
+                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          }}
+                          onClick={() => setActiveStep(activeStep + 1)}> 
+                          Next 
+                  </Button>
+                </Card>
+                <Box sx={{marginTop: 4, width: '80%', justifySelf: 'center', alignSelf: 'center'}}>
+                  <Editor chunks={urlData} setChunks={setUrlData}/>
+                </Box>
+                </Stack>
+                }
+
+                {activeStep == 2 && 
+                  <div className="mt-8">
+                    <div className="rounded-lg shadow-sm divide-y p-6">
+                        <div className="space-y-6">
+                            {/* <div className="flex justify-center sm:justify-end ">
+                                <Checkbox
+                                  color="neutral"
+                                  label="Altman Mode"
+                                  size="lg"
+                                  variant="outlined"
+                                  checked={model === 'altman' ? true : false}
+                                  onChange={handleAltmanChange} 
                                   style={{
-                                    backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
-                                    color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
-                                    cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                                    color: 'white',
+                                    alignSelf:'center',
+                                    justifySelf: 'center',
                                   }}
-                                  disabled={fileIcon !== 'check' || urlIcon !== 'check'}
-                              >
-                                  Generate
-                              </Button>
-                            </div>
-                            
-                            
-                            {paragraph && (
-                              <Box display="flex" justifyContent="center" alignItems="center">
-                                  <PDFDownloadLink
-                                      document={
-                                          <PDFDocument
-                                              userName={userName}
-                                              bodyParagraph={paragraph}
-                                              jobTitle={jobName}
-                                              companyName={companyName}
-                                          />
-                                      }
-                                      fileName="your-gecover.pdf"
-                                  >
-                                      {({ blob, url, loading, error }) => (
-                                          <Button 
-                                              variant="contained" 
-                                              color="primary"
-                                              sx={{ 
-                                                backgroundColor: '#f472b6', 
-                                                color: 'white',
-                                                '&:hover': {
-                                                    backgroundColor: '#EC4899',
-                                                },
-                                              }}
-                                              style={{ marginRight: '10px' }}
-                                              disabled={loading}
-                                          >
-                                              {loading ? 'Loading document...' : 'Download PDF'}
-                                          </Button>
-                                      )}
-                                  </PDFDownloadLink>
-                                  <Button 
-                                      variant="contained" 
-                                      sx={{                                         
-                                        backgroundColor: '#57534E',
-                                        '&:hover': {
-                                        backgroundColor: '#EC4899',
-                                    }, 
+                                />
+                              </div> */}
+                              <div className="flex justify-center">
+                                <Button 
+                                    size="lg"
+                                    onClick={handleSubmit}
+                                    style={{
+                                      backgroundColor: fileIcon !== 'check' || urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                                      color: fileIcon !== 'check' || urlIcon !== 'check' ? 'white' : 'white', 
+                                      cursor: fileIcon !== 'check' || urlIcon !== 'check' ? 'not-allowed' : 'pointer'
                                     }}
-                                      onClick={handleDownload}
-                                  >
-                                      Download txt
-                                  </Button>
-                              </Box>
-                          )}
-                          </div>
-                      </div>
-                  </div> */}
-              </div>
+                                    disabled={fileIcon !== 'check' || urlIcon !== 'check'}
+                                >
+                                    Generate
+                                </Button>
+                              </div>
+                              
+                              
+                              {paragraph && (
+                                <Box display="flex" justifyContent="center" alignItems="center">
+                                    <PDFDownloadLink
+                                        document={
+                                            <PDFDocument
+                                                userName={userName}
+                                                bodyParagraph={paragraph}
+                                                jobTitle={jobName}
+                                                companyName={companyName}
+                                            />
+                                        }
+                                        fileName="your-gecover.pdf"
+                                    >
+                                        {({ blob, url, loading, error }) => (
+                                            <Button 
+                                                color="primary"
+                                                sx={{ 
+                                                  backgroundColor: '#f472b6', 
+                                                  color: 'white',
+                                                  '&:hover': {
+                                                      backgroundColor: '#EC4899',
+                                                  },
+                                                }}
+                                                style={{ marginRight: '10px' }}
+                                                disabled={loading}
+                                            >
+                                                {loading ? 'Loading document...' : 'Download PDF'}
+                                            </Button>
+                                        )}
+                                    </PDFDownloadLink>
+                                    <Button 
+                                        sx={{                                         
+                                          backgroundColor: '#57534E',
+                                          '&:hover': {
+                                          backgroundColor: '#EC4899',
+                                      }, 
+                                      }}
+                                        onClick={handleDownload}
+                                    >
+                                        Download txt
+                                    </Button>
+                                </Box>
+                            )}
+                            </div>
+                        </div>
+                    </div>
+              }
             </div>
+        </div>
     </section>
     </>
   );
