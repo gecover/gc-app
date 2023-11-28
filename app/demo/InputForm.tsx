@@ -163,8 +163,10 @@ export default function InputForm({ session, userName }: Props) {
     const TIMEOUT_DURATION = 150000; 
 
     const formData = new FormData();
-    formData.append('file', fileData);
-    formData.append('type', 'application/pdf');
+    if (fileData){
+      formData.append('file', fileData);
+      formData.append('type', 'application/pdf');
+    }
     setIsLoading(true);
 
     let urlList = null;
