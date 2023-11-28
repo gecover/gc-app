@@ -57,31 +57,33 @@ const FileDrop = ({ handleFileChange, icon }: FileDropProps) => {
       onDragLeave={handleDrag} 
       onDragOver={handleDrag} 
       onDrop={handleDrop} 
-      className={`p-6 border-2 border-dashed ${dragActive ? 'border-pink-700' : 'border-pink-500'}`}
+      className={`flex flex-row`}
     >
-      <div className="flex justify-center items-center mb-4">
-        {icon === 'check' ? (
-          <CheckIcon className={`icon-transition ${icon === 'check' ? 'icon-rotate' : ''}`} style={{ color: 'green' }} />
-        ) : (
-          <CloseIcon className={`icon-transition ${icon === 'X' ? 'icon-rotate' : ''}`} style={{ color: 'white' }} />
-        )}
+      <div className={`border-2 border-dashed p-4 rounded-lg  ${dragActive ? 'border-pink-500' : 'border-black'} ${dragActive ? 'bg-slate-300' : ''}`}>
+        <div className={`flex flex-col justify-center items-center mb-4`}>
+          {icon === 'check' ? (
+            <CheckIcon className={`icon-transition ${icon === 'check' ? 'icon-rotate' : ''}`} style={{ color: 'green' }} />
+          ) : (
+            <CloseIcon className={`icon-transition ${icon === 'X' ? 'icon-rotate' : ''}`} style={{ color: 'black' }} />
+          )}
+        </div>
+        <input type="file" onChange={handleChange} className="hidden" />
+        <p className="text-center text-black">
+          Drag and drop your resume here, or 
+          <br></br>
+          <span 
+            className="text-pink-500 underline cursor-pointer"
+            onClick={() => {
+              const fileInput = document.querySelector<HTMLInputElement>('[type="file"]');
+              if (fileInput) {
+                fileInput.click();
+              }
+            }}
+          >
+            click to select
+          </span>
+        </p>
       </div>
-      <input type="file" onChange={handleChange} className="hidden" />
-      <p className="text-center text-white">
-        Drag and drop your resume here, or 
-        <br></br>
-        <span 
-          className="text-pink-500 underline cursor-pointer"
-          onClick={() => {
-            const fileInput = document.querySelector<HTMLInputElement>('[type="file"]');
-            if (fileInput) {
-              fileInput.click();
-            }
-          }}
-        >
-          click to select
-        </span>
-      </p>
     </div>
   );
 };

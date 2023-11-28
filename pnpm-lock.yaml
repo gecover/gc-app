@@ -15,7 +15,7 @@ dependencies:
     specifier: ^5.14.18
     version: 5.14.18(@mui/material@5.14.17)(@types/react@18.2.7)(react@18.2.0)
   '@mui/joy':
-    specifier: ^5.0.0-beta.14
+    specifier: 5.0.0-beta.14
     version: 5.0.0-beta.14(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
   '@mui/material':
     specifier: ^5.14.17
