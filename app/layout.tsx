@@ -48,7 +48,7 @@ export default function RootLayout({
 }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className="bg-black loading">
+      <body className="bg-sky-950 loading">
         <SupabaseProvider>
           
           {/* @ts-expect-error */}
