@@ -338,11 +338,11 @@ export default function InputForm({ session, userName }: Props) {
 
                   
                   <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
-                      style={{
-                        backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
-                        color: urlIcon !== 'check' ? 'white' : 'white', 
-                        cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                      }}
+                      // style={{
+                      //   backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                      //   color: urlIcon !== 'check' ? 'white' : 'white', 
+                      //   cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                      // }}
                       disabled={urlIcon !== 'check'} 
                       loading={buttonLoading}
                       onClick={handleURLSubmit}> 
@@ -352,11 +352,11 @@ export default function InputForm({ session, userName }: Props) {
                   
                   
                   <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
-                          style={{
-                            backgroundColor: '#385E72',
-                            color: 'white', 
-                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                          }}
+                          // style={{
+                          //   backgroundColor: '#385E72',
+                          //   color: 'white', 
+                          //   cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          // }}
                           disabled
                           onClick={() => setActiveStep(activeStep + 1)}> 
                           Next 
@@ -419,21 +419,21 @@ export default function InputForm({ session, userName }: Props) {
                       }}     
                     />
                   <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
-                          style={{
-                            backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
-                            color: urlIcon !== 'check' ? 'white' : 'white', 
-                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                          }}
+                          // style={{
+                          //   backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                          //   color: urlIcon !== 'check' ? 'white' : 'white', 
+                          //   cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          // }}
                           disabled={urlIcon !== 'check'} 
                           onClick={handleURLSubmit}> 
                           Submit 
                   </Button>
                   <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
-                          style={{
-                            backgroundColor: '#6AABD2',
-                            color: 'white', 
-                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                          }}
+                          // style={{
+                          //   backgroundColor: '#6AABD2',
+                          //   color: 'white', 
+                          //   cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                          // }}
                           onClick={() => setActiveStep(activeStep + 1)}> 
                           Next 
                   </Button>
@@ -504,7 +504,7 @@ export default function InputForm({ session, userName }: Props) {
                                                       backgroundColor: '#EC4899',
                                                   },
                                                 }}
-                                                style={{ marginRight: '10px' }}
+                                                // style={{ marginRight: '10px' }}
                                                 disabled={loading}
                                             >
                                                 {loading ? 'Loading document...' : 'Download PDF'}
