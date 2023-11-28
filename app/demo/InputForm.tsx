@@ -48,7 +48,7 @@ const steps = ['Upload Resume', 'Paste URL', 'Generate'];
 
 
 export default function InputForm({ session, userName }: Props) {
-  const [file, setFile] = useState<File | null>(null);
+  const [fileData, setFile] = useState<File>();
   const [url, setUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [paragraph, setParagraph] = useState<string>('');
@@ -63,6 +63,7 @@ export default function InputForm({ session, userName }: Props) {
   const [urlIcon, setUrlIcon] = useState('X'); 
   const [model, setModel] = useState('normal'); 
   const [activeStep, setActiveStep] = React.useState(0);
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
 
 
   const [paragraphB, setParagraphB] = useState<string>('');
@@ -83,44 +84,13 @@ export default function InputForm({ session, userName }: Props) {
     setFileIcon('X')
   }
 
-  const handleFileChange = async (file: File) => {
+  const handleFileChange = (file: File) => {
     setFile(file);
-    console.log('FILE RECEIVED', file);
-    let resumeList = null;
-
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'application/pdf');
-
-
-      try {
-        resumeList = await axios.post(`${process.env.API_URL}/read_pdf/`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization' : `Bearer ${session.access_token}`
-          },
-        });
-        const length = resumeList.data.contents.length;
-        console.log(resumeList.data)
-        if (length > 5){
-          const data: Array<string> = resumeList.data.contents
-          setResumeData(data);
-          setOpen(true);
-          setColor('success');
-          setBanner(`You loaded a pdf with ${length} chunks.`);
-          setFileIcon('check');
-        } else {
-          setResumeData(resumeList.data.contents);
-          setOpen(true);
-          setColor('danger');
-          setBanner(`You loaded a pdf with ${length} chunks. Parsing did not work well, and you likely will not get good results.`);
-          setFileIcon('X');
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      } 
-    }
+    setFileIcon('check');
+    setActiveStep(activeStep + 1);
+    setOpen(true);
+    setColor('success');
+    setBanner(`Successfully loaded your resume.`);
   };
 
   const handleDownload = () => {
@@ -161,6 +131,7 @@ export default function InputForm({ session, userName }: Props) {
   };
 
   const handleURLSubmit = async () => {
+    setButtonLoading(true);
     try {
       const urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
       { url },
@@ -185,12 +156,16 @@ export default function InputForm({ session, userName }: Props) {
     catch (e) {
       console.error(e);
     }
+    setButtonLoading(false);
   }
 
   const handleSubmit = async () => {
     const TIMEOUT_DURATION = 150000; 
+
+    const formData = new FormData();
+    formData.append('file', fileData);
+    formData.append('type', 'application/pdf');
     setIsLoading(true);
-    console.log("Model: ", model);
 
     let urlList = null;
     if ((urlIcon == 'check')) {
@@ -202,29 +177,20 @@ export default function InputForm({ session, userName }: Props) {
           setUrlIcon('X');
           throw new Error("no job requirements");
         } 
-        if (resumeData.length == 0) {
-          setOpen(true);
-          setColor('danger');
-          setBanner(`We didn't get your resume information. Please head to step 1.`);
-          setUrlIcon('X');
-          throw new Error("no resume information");
-        }
         
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
-        const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, {
-        requirements: urlData,
-        resume_documents: resumeData,
-        model: {'model' : model},
-        }, {
+        const requirements = urlData.toString();
+        const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, formData, {
             cancelToken: source.token,
             timeout: TIMEOUT_DURATION,
             headers: {
               'Authorization' : `Bearer ${session.access_token}`
-            }
+            },
+            params: { requirements }
         });
         source.cancel('Request was cancelled by the user.');
-        console.log(generatedParagraphs.data);
+        console.log(generatedParagraphs.data.para_A);
         setParagraph(generatedParagraphs.data.para_A);
          
       } catch (error) {
@@ -367,16 +333,22 @@ export default function InputForm({ session, userName }: Props) {
                         ),
                       }}     
                     />
+
+                  
                   <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
-                          style={{
-                            backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
-                            color: urlIcon !== 'check' ? 'white' : 'white', 
-                            cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
-                          }}
-                          disabled={urlIcon !== 'check'} 
-                          onClick={handleURLSubmit}> 
-                          Submit 
+                      style={{
+                        backgroundColor: urlIcon !== 'check' ? '#b0b0b0' : '#ec4899',
+                        color: urlIcon !== 'check' ? 'white' : 'white', 
+                        cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
+                      }}
+                      disabled={urlIcon !== 'check'} 
+                      loading={buttonLoading}
+                      onClick={handleURLSubmit}> 
+                      Submit 
                   </Button>
+                  
+                  
+                  
                   <Button sx={{alignSelf: 'flex-center', justifySelf: 'flex-end'}}                                   
                           style={{
                             backgroundColor: '#385E72',
@@ -520,6 +492,8 @@ export default function InputForm({ session, userName }: Props) {
                                     >
                                         {({ blob, url, loading, error }) => (
                                             <Button 
+                                              size='lg'
+
                                                 color="primary"
                                                 sx={{ 
                                                   backgroundColor: '#f472b6', 
@@ -536,6 +510,7 @@ export default function InputForm({ session, userName }: Props) {
                                         )}
                                     </PDFDownloadLink>
                                     <Button 
+                                      size='lg'
                                         sx={{                                         
                                           backgroundColor: '#57534E',
                                           '&:hover': {
