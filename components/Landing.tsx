@@ -96,7 +96,7 @@ export default function Landing() {
             <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
               We support job posting URLs from 
             </Typography>  
-            <Stack direction="row" justifyContent="center" sx={{paddingTop: 4}} spacing={2}>
+            <Stack className="flex flex-col items-center justify-center sm:md:lg:flex-row xl:2xl:flex-row pt-8 gap-4" >
               <Image src="/handshake.png" alt="shandshake logo" width={100} height={56.25}/>
               <Image src="/LI-Logo.png" alt="LinkedIn logo" width={100} height={56.25}/>
               <Image src="/Indeed_Logo_RGB.png" alt="indeed logo" width={100} height={56.25}/>
@@ -109,19 +109,19 @@ export default function Landing() {
               User reviews 
             </Typography>  
             <Stack direction="row" justifyContent="center" alignItems="center" className="flex-col gap-2 sm:flex-row md:flex-row lg:flex-row xl:flex-row 2xl:flex-row  pt-4 w-5/6">
-              <Card className="w-5/6 min-h-[150px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" >
+              <Card className="w-5/6 min-h-[250px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] xl:min-h-[150px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" >
                  "GeCover completely changed how I apply for jobs. It's never been easier to sit down for half an hour and get 10 job applications sent. Amazing product."
                  <Typography className="absolute text-right bottom-0 pb-2 pr-2">
                     - First year engineering at Queen's University
                  </Typography>
               </Card>
-              <Card className="w-5/6  min-h-[150px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" > 
+              <Card className="w-5/6  min-h-[250px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] xl:min-h-[150px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" > 
                 "Something about the uniqueness of each response keeps me coming back.. perfectly tailored information from my resume for the job I'm applying to, everytime." 
                 <Typography className="absolute text-right bottom-0 pb-2 pr-2">
                     - Second year nursing at University of Calgary
                  </Typography>
               </Card>
-              <Card className="w-5/6 min-h-[150px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" > 
+              <Card className="w-5/6 min-h-[250px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] xl:min-h-[150px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" > 
                 "Irreplacible tool for anyone currently looking for a job."
                 <Typography className="absolute text-right bottom-0 pb-2 pr-2">
                     - Fourth year business at University of Calgary
