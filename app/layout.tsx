@@ -3,6 +3,7 @@ import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 import Link from 'next/link';
 
@@ -47,30 +48,34 @@ export default function RootLayout({
   children
 }: PropsWithChildren) {
   return (
-    <html lang="en">
-      <body className="bg-sky-950 loading">
-        <SupabaseProvider>
-          
-          {/* @ts-expect-error */}
-          <Navbar />
-          <main
-            id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
-          >
-            {children}
-          </main>    
-          <footer className="flex flex-row justify-center bg-gray-800 text-white p-4 text-center">
-              <Link
-                href="/contact"
-                className="m-2"
-              >
-                Contacts
-              </Link>
-              <p className="font-bold m-2">&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
-              <a className="m-2" href="https://www.termsfeed.com/live/15cd706e-a80f-4ad0-a1cc-34f68716ad27"> Privacy Policy</a>
-          </footer>
-        </SupabaseProvider>
-      </body>
-    </html>
+    <StyledEngineProvider injectFirst>
+
+      <html lang="en">
+        <body className="bg-sky-950 loading">
+          <SupabaseProvider>
+            
+            {/* @ts-expect-error */}
+            <Navbar />
+            <main
+              id="skip"
+              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+            >
+              {children}
+            </main>    
+            <footer className="flex flex-row justify-center bg-gray-800 text-white p-4 text-center">
+                <Link
+                  href="/contact"
+                  className="m-2"
+                >
+                  Contacts
+                </Link>
+                <p className="font-bold m-2">&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
+                <a className="m-2" href="https://www.termsfeed.com/live/15cd706e-a80f-4ad0-a1cc-34f68716ad27"> Privacy Policy</a>
+            </footer>
+          </SupabaseProvider>
+        </body>
+      </html>
+      </StyledEngineProvider>
+
   );
 }

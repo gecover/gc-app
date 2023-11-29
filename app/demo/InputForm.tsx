@@ -136,7 +136,7 @@ export default function InputForm({ session, userName }: Props) {
       const urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
       { url },
       {headers: {
-        'Authorization' : `Bearer ${session.access_token}`
+        // 'Authorization' : `Bearer ${session.access_token}`
       }});
       if (!urlList.data.contents) {
         setOpen(true);
@@ -181,20 +181,20 @@ export default function InputForm({ session, userName }: Props) {
         } 
         
         const CancelToken = axios.CancelToken;
-        const source = CancelToken.source();
+        // const source = CancelToken.source();
         const requirements = urlData.toString();
         const generatedParagraphs = await axios.post(`${process.env.API_URL}/generate_paragraphs/`, formData, {
-            cancelToken: source.token,
+            // cancelToken: source.token,
             timeout: TIMEOUT_DURATION,
             headers: {
-              'Authorization' : `Bearer ${session.access_token}`
+              // 'Authorization' : `Bearer ${session.access_token}`
             },
             params: { requirements }
         });
-        source.cancel('Request was cancelled by the user.');
+        console.log("waiting for pdf...")
+        // source.cancel('Request was cancelled by the user.');
         console.log(generatedParagraphs.data.para_A);
         setParagraph(generatedParagraphs.data.para_A);
-         
       } catch (error) {
         console.error('Error fetching URL:', error);
       } finally {
@@ -217,7 +217,7 @@ export default function InputForm({ session, userName }: Props) {
                     For a smooth start, please take a moment to explore our <Link className="font-black text-pink-500 text-xl text-center" href="/tutorial">helpful guide for first-time users. </Link>
                 </h1>
 
-                <Card sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '60%',  display: 'flex', justifySelf: 'center', alignSelf: 'center', justifyContent: 'center', alignItems: 'center'}}>
+                <Card className="mt-4 bg-white w-full sm:w-2/3 md:w-2/3 lg:w-2/3 xl:w-2/3 2xl:w-2/3 flex justify-center items-center self-center">
                   <Stepper sx={{ width: '100%' }}>
                   {steps.map((step, index) => (
                       <Step
@@ -243,7 +243,7 @@ export default function InputForm({ session, userName }: Props) {
                   </Stepper>
                 </Card>
                 {activeStep == 4 && 
-                <Card  sx={{ marginTop: '4rem', backgroundColor: 'whitesmoke', width: '100%',  display: 'flex', flexDirection: "row", alignItems: 'center'}}>
+                <Card className="mt-4 bg-white w-full flex flex-row items-center">
                   <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
                   <Editor chunks={resumeData} setChunks={setResumeData} />
                   <Button onClick={() => setActiveStep(activeStep + 1)}> Next </Button>
@@ -252,18 +252,10 @@ export default function InputForm({ session, userName }: Props) {
                 }
                 {activeStep == 0 && resumeData.length == 0 &&
 
-                <Grid container spacing={2} sx={{ flexGrow: 1, marginTop: 4, alignItems: 'center' }}>
-                  <Grid xs={4}>
-                  </Grid>
-                  <Grid xs={4}>
-                    <Card sx={{alignItems: 'center', justifyContent: 'center'}}>
-                      <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
-                    </Card>
-                  </Grid>
-                  <Grid xs={4}>
-                  </Grid>
-                </Grid>
-                
+                  <Card className="sm:md:lg:w-1/2 mt-4 xl:2xl:w-1/2 items-center self-center justify-self-center justify-center">
+                    <FileDrop handleFileChange={handleFileChange} icon={fileIcon}/>
+                  </Card>
+                               
                 }
                 {activeStep == 0 && resumeData.length > 0 &&
                 <Grid container spacing={2} sx={{ flexGrow: 1, marginTop: 4 }}>
@@ -283,7 +275,7 @@ export default function InputForm({ session, userName }: Props) {
                 }
                 
                 {activeStep == 1 && urlData.length == 0 &&
-                <Card  sx={{ justifySelf: 'center', alignSelf: 'center', marginTop: '4rem', backgroundColor: 'whitesmoke', width: '80%',  display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
+                <Card className="justify-center self-center mt-4 bg-white sm:w-2/3 md:w-2/3 lg:w-2/3 xl:w-2/3 2xl:w-2/3 flex flex-col sm:flex-row md:flex-row lg:flex-row xl:flex-row 2xl:flex-row items-center">
                   <TextField 
                       label="Enter Job Posting URL" 
                       variant="outlined" 
