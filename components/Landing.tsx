@@ -4,6 +4,13 @@ import React from 'react';
 import Link from 'next/link';
 import { Card, Stack, Typography } from '@mui/joy';
 import Typed from 'typed.js';
+import Image from 'next/image';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemContent from '@mui/joy/ListItemContent';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Landing() {
   const el = React.useRef(null);
@@ -44,24 +51,28 @@ export default function Landing() {
 
     return (
         <div className="min-h-screen">
-          <Stack direction="row">
-            <Stack direction="column" alignItems='center' sx={{ maxWidth: 400, marginLeft: 16, marginTop:8 }}>
-              <Typography level="h1" sx={{color: 'white'}}>
+          <Stack className="flex flex-col items-center sm:flex-row md:flex-row lg:flex-row mt-8 justify-center align-center">
+            <Stack className="items-center sm:md:lg:xl:2xl:ml-4 flex-column text-center sm:text-left md:text-left lg:text-left xl:text-left max-w-[400px] w-5/6 md:max-w-[450px] lg:md:max-w-[650px] mt-8" >
+              <Typography level="h1" className="text-white">
                 Tired of writing cover letters?
-                Let us write them for you. 
+                Let us simplify the process. 
                 {' '}
-                <Typography variant="soft"  sx={{}}>
+                <Typography variant="soft">
                   Unlimited 
                 </Typography>
                 {' '} cover letters. Only $8/mo.
               </Typography>
-              <Stack direction="row">
+              <Typography level="title-lg" className="text-white mt-4">
+                It is our goal to make job hunting easier.
+                We make generating cover letters as easy as uploading your resume and providing a link to the job posting. That's it.
+              </Typography>
+              <Stack direction="row" className="mb-8">
                 <Link href={'/demo'}>
                   <button
                       className="middle mt-8 none center rounded-md bg-pink-500 py-3 px-6 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/50 hover:scale-1.10 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       data-ripple-light="true"
                       >
-                      Try the demo
+                      Try for free
                   </button>
                 </Link>
                 <Link href={'/plans'}>
@@ -74,19 +85,59 @@ export default function Landing() {
                 </Link>
               </Stack>
             </Stack>
-            <Card sx={{width: 300, maxWidth: 300, height: 320, alignSelf: 'center', marginLeft: 'auto', marginRight: 24, marginTop: 8}}>
+            <Card className="min-w-[300px] max-w-[300px] h-[350px] self-center sm:md:lg:xl:2xlmr-8">
               <Typography level="body-sm" >
                 <span ref={el} />
               </Typography>
             </Card>
             
-          </Stack>          
-          <section id="features" className="container mx-auto p-8">
-            <h3 className="text-3xl text-center font-semibold mb-8">Features</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          </Stack>   
+          <Stack direction="column">
+            <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
+              We support job posting URLs from 
+            </Typography>  
+            <Stack direction="row" justifyContent="center" sx={{paddingTop: 4}} spacing={2}>
+              <Image src="/handshake.png" alt="shandshake logo" width={100} height={56.25}/>
+              <Image src="/LI-Logo.png" alt="LinkedIn logo" width={100} height={56.25}/>
+              <Image src="/Indeed_Logo_RGB.png" alt="indeed logo" width={100} height={56.25}/>
+              <Image src="/glassdoor.png" alt="glassdoorlogo" width={100} height={56.25}/>
+
+            </Stack>
+          </Stack>   
+          <Stack direction="column" justifyContent="center" alignItems='center' >
+            <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
+              User reviews 
+            </Typography>  
+            <Stack direction="row" justifyContent="center" alignItems="center" className="flex-col gap-2 sm:flex-row md:flex-row lg:flex-row xl:flex-row 2xl:flex-row  pt-4 w-5/6">
+              <Card className="w-5/6 min-h-[150px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" >
+                 "GeCover completely changed how I apply for jobs. It's never been easier to sit down for half an hour and get 10 job applications sent. Amazing product."
+                 <Typography className="absolute text-right bottom-0 pb-2 pr-2">
+                    - First year engineering at Queen's University
+                 </Typography>
+              </Card>
+              <Card className="w-5/6  min-h-[150px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" > 
+                "Something about the uniqueness of each response keeps me coming back.. perfectly tailored information from my resume for the job I'm applying to, everytime." 
+                <Typography className="absolute text-right bottom-0 pb-2 pr-2">
+                    - Second year nursing at University of Calgary
+                 </Typography>
+              </Card>
+              <Card className="w-5/6 min-h-[150px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" > 
+                "Irreplacible tool for anyone currently looking for a job."
+                <Typography className="absolute text-right bottom-0 pb-2 pr-2">
+                    - Fourth year business at University of Calgary
+                 </Typography>
+              </Card>
+            </Stack>
+          </Stack>    
+          <Stack direction="column">
+            <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
+              Features
+            </Typography>  
+            <Stack direction="row" justifyContent="center" sx={{paddingTop: 4}} spacing={2}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-5/6">
               <div className="p-6 rounded-lg shadow-md bg-white bg-opacity-20 hover:bg-opacity-50 hover:bg-pink-200 transition ease-in-out">
                 <h4 className="text-xl font-semibold mb-3"> Fully Personalized </h4>
-                <p> Information in our cover letters is sourced directly from your resume using tech from Cohere.</p>
+                <p> Information in our cover letters is sourced directly from your resume.</p>
               </div>
               <div className=" p-6 rounded-lg shadow-md bg-white bg-opacity-20 hover:bg-opacity-50 hover:bg-pink-200 transition ease-in-out">
                 <h4 className="text-xl font-semibold mb-3"> GPT Undetectable</h4>
@@ -97,7 +148,75 @@ export default function Landing() {
                 <p> With our pro plan, generate as many cover letters as you need.</p>
               </div>
             </div>
-          </section>
+            </Stack>
+          </Stack>    
+          <Stack direction="column">
+            <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
+              Plans
+            </Typography>  
+            <Stack className="self-center flex-column justify-center w-[90%] sm:flex-row md:flex-row lg:flex-row xl:flex-row 2xl:flex-row py-4 gap-8">
+              <Card className="lg:w-1/4 2xl:w-1/6 min-h-[150px]">
+                <Typography level="h2">
+                  Basic
+                </Typography>
+                <Typography level="h4">
+                  $0 a month
+                </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemContent>3 cover letters per week</ListItemContent>
+                    <ListItemDecorator><CheckIcon /></ListItemDecorator>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemContent> Use supported job URLs </ListItemContent>
+                    <ListItemDecorator><CheckIcon /></ListItemDecorator>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemContent> Access to the newest features </ListItemContent>
+                    <ListItemDecorator><CloseIcon /></ListItemDecorator>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemContent> Custom writing styles </ListItemContent>
+                    <ListItemDecorator><CloseIcon/></ListItemDecorator>
+                  </ListItem>
+                </List>
+              </Card>
+              <Card className="lg:w-1/4 2xl:w-1/6 min-h-[150px]">
+                <Typography level="h2">
+                  Premium
+                </Typography>
+                <Typography level="h4">
+                  $8 a month
+                </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemContent>Unlimited cover letters</ListItemContent>
+                    <ListItemDecorator><CheckIcon className="text-green-500"/></ListItemDecorator>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemContent> Support for any URL </ListItemContent>
+                    <ListItemDecorator><CheckIcon className="text-green-500"/></ListItemDecorator>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemContent> Access to the newest features </ListItemContent>
+                    <ListItemDecorator><CheckIcon className="text-green-500"/></ListItemDecorator>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemContent> Custom writing styles </ListItemContent>
+                    <ListItemDecorator><CheckIcon className="text-green-500"/></ListItemDecorator>
+                  </ListItem>
+                </List>
+              </Card>
+            </Stack>
+           
+          </Stack>   
+          {/* <Stack direction="column">
+            <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
+              Frequently asked questions
+            </Typography>  
+            
+          </Stack>    */}
+         
         </div>
       );
 }
