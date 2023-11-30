@@ -30,6 +30,11 @@ body {
   margin: 0;
 }
 
+body.dark {
+  background-color: black;
+  color: white;
+}
+
 a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -46,3 +51,20 @@ a {
 .height-screen-helper {
   height: calc(100vh - 80px);
 }
+
+.bg-custom-light {
+  background-color: #0ea5e9; 
+}
+
+.text-custom-light {
+  color: #333; 
+}
+
+.dark .bg-custom-dark {
+  background-color: #082f49; 
+}
+
+.dark .text-custom-dark {
+  color: #cbd5e1; 
+}
+

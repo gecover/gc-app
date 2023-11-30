@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { createServerSupabaseClient } from '@/app/supabase-server';
-
 import Logo from '@/components/icons/Logo';
 import SignOutButton from './SignOutButton';
-
+import ThemeSwitch from '../ThemeSwitch/ThemeSwitch';
 import s from './Navbar.module.css';
 
 export default async function Navbar() {
@@ -24,9 +23,9 @@ export default async function Navbar() {
               <Logo />
             </Link>
             <nav className="hidden ml-6 space-x-2 lg:block">
-              {/* <Link href="/pricing" className={s.link}>
-                Pricing
-              </Link> */}
+              <Link href="/pricing" className={s.link}>
+                Plans
+              </Link>
               {user && (
                 <Link href="/account" className={s.link}>
                   Account
@@ -50,6 +49,7 @@ export default async function Navbar() {
                 Sign In
               </Link>
             )}
+            <ThemeSwitch />
           </div>
         </div>
       </div>

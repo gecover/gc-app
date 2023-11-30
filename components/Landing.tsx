@@ -75,9 +75,9 @@ export default function Landing() {
                       Try for free
                   </button>
                 </Link>
-                <Link href={'/plans'}>
+                <Link href={'/pricing'}>
                   <button
-                      className="middle mt-8 mx-4 bg-sky-800 none center rounded-md py-3 px-6 font-sans text-sm font-bold uppercase text-white shadow-md shadow-sky-800/20 transition-all hover:shadow-lg hover:shadow-sky-800/50 hover:scale-1.10 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                      className="middle mt-8 mx-4 bg-sky-950 none center rounded-md py-3 px-6 font-sans text-sm font-bold uppercase text-white shadow-md shadow-sky-800/20 transition-all hover:shadow-lg hover:shadow-sky-800/50 hover:scale-1.10 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       data-ripple-light="true"
                       >
                       plans
@@ -106,7 +106,7 @@ export default function Landing() {
           </Stack>   
           <Stack direction="column" justifyContent="center" alignItems='center' >
             <Typography level="title-lg" sx={{marginX: 'auto', paddingTop: 8, color: 'white'}}>
-              User reviews 
+              User Reviews 
             </Typography>  
             <Stack direction="row" justifyContent="center" alignItems="center" className="flex-col gap-2 sm:flex-row md:flex-row lg:flex-row xl:flex-row 2xl:flex-row  pt-4 w-5/6">
               <Card className="w-5/6 min-h-[250px] sm:min-h-[350px] md:min-h-[300px] lg:min-h-[250px] xl:min-h-[150px] 2xl:w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/3 xl:min-h-[150px]" >

@@ -4,8 +4,8 @@ import Navbar from '@/components/ui/Navbar';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 import { StyledEngineProvider } from '@mui/material/styles';
-
 import Link from 'next/link';
+import { ThemeProvider } from '../contexts/ThemeContext';
 
 const meta = {
   title: 'gecover - Automated, Tailored Cover Letters',
@@ -42,40 +42,40 @@ export const metadata = {
   }
 };
 
-export default function RootLayout({
-  // Layouts must accept a children prop.
+// Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
-  children
-}: PropsWithChildren) {
+export default function RootLayout({ children }: PropsWithChildren) {
+
   return (
-    <StyledEngineProvider injectFirst>
+    <ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <html lang="en">
+          <body className="bg-custom-light dark:bg-custom-dark loading">
+            <SupabaseProvider>
+              
+              {/* @ts-expect-error */}
+              <Navbar />
+              <main
+                id="skip"
+                className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+              >
+                {children}
+              </main>    
+              <footer className="flex flex-row justify-center bg-gray-800 text-white p-4 text-center">
+                  <Link
+                    href="/contact"
+                    className="m-2"
+                  >
+                    Contacts
+                  </Link>
+                  <p className="font-bold m-2">&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
+                  <a className="m-2" href="https://www.termsfeed.com/live/15cd706e-a80f-4ad0-a1cc-34f68716ad27"> Privacy Policy</a>
+              </footer>
+            </SupabaseProvider>
+          </body>
+        </html>
+        </StyledEngineProvider>
 
-      <html lang="en">
-        <body className="bg-sky-950 loading">
-          <SupabaseProvider>
-            
-            {/* @ts-expect-error */}
-            <Navbar />
-            <main
-              id="skip"
-              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
-            >
-              {children}
-            </main>    
-            <footer className="flex flex-row justify-center bg-gray-800 text-white p-4 text-center">
-                <Link
-                  href="/contact"
-                  className="m-2"
-                >
-                  Contacts
-                </Link>
-                <p className="font-bold m-2">&copy; {new Date().getFullYear()} GeCover. All rights reserved.</p>
-                <a className="m-2" href="https://www.termsfeed.com/live/15cd706e-a80f-4ad0-a1cc-34f68716ad27"> Privacy Policy</a>
-            </footer>
-          </SupabaseProvider>
-        </body>
-      </html>
-      </StyledEngineProvider>
-
+    </ThemeProvider>
   );
 }

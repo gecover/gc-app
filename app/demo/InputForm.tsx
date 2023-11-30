@@ -114,19 +114,26 @@ export default function InputForm({ session, userName }: Props) {
     console.log('URL RECEIVED', url);
 
     const linkedInJobRegex = /^https:\/\/www\.linkedin\.com\/jobs\/view\/.*$/;
+    const indeedJobRegex = /jk=[a-f0-9]+/i;
     console.log('URL;', event.target.value)
     console.log('TEST RGEX', linkedInJobRegex.test(event.target.value))
     if (linkedInJobRegex.test(event.target.value)) {
       setUrl(event.target.value);
       setOpen(true);
       setColor('success');
-      setBanner(`URL format valid.`);
+      setBanner(`LinkedIn URL format valid.`);
+      setUrlIcon('check');
+    } else if (indeedJobRegex.test(event.target.value)) {
+      setUrl(event.target.value);
+      setOpen(true);
+      setColor('success');
+      setBanner('Indeed URL format valid.');
       setUrlIcon('check');
     } else {
       setUrlIcon('X');
       setOpen(true);
       setColor('danger');
-      setBanner(`It appears the URL provided has an invalid format. We support linked post of the form https://www.linkedin.com/jobs/view/***********.`);
+      setBanner(`It appears the URL provided has an invalid format. We support linked post of the form https://www.linkedin.com/jobs/view/*********** or Indeed job URLs with the jk parameter.`);
     }
   };
 
@@ -233,7 +240,7 @@ export default function InputForm({ session, userName }: Props) {
                         sx={{
                           '&::after': {
                             ...(activeStep > index &&
-                              index !== 2 && { bgcolor: 'primary.solidBg' }),
+                              index !== 2 && { bgcolor: '#ec4899' }),
                           },
                         }}
                       >
