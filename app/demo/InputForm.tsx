@@ -136,7 +136,7 @@ export default function InputForm({ session, userName }: Props) {
       const urlList = await axios.post(`${process.env.API_URL}/extract_url/`, 
       { url },
       {headers: {
-        'Authorization' : `Bearer ${session.access_token}`
+        // 'Authorization' : `Bearer ${session.access_token}`
       }});
       if (!urlList.data.contents) {
         setOpen(true);
@@ -187,7 +187,7 @@ export default function InputForm({ session, userName }: Props) {
             // cancelToken: source.token,
             timeout: TIMEOUT_DURATION,
             headers: {
-              'Authorization' : `Bearer ${session.access_token}`
+              // 'Authorization' : `Bearer ${session.access_token}`
             },
             params: { requirements }
         });
@@ -417,6 +417,7 @@ export default function InputForm({ session, userName }: Props) {
                             cursor: urlIcon !== 'check' ? 'not-allowed' : 'pointer'
                           }}
                           disabled={urlIcon !== 'check'} 
+                          loading={buttonLoading}
                           onClick={handleURLSubmit}> 
                           Submit 
                   </Button>
@@ -505,12 +506,7 @@ export default function InputForm({ session, userName }: Props) {
                                     </PDFDownloadLink>
                                     <Button 
                                       size='lg'
-                                        sx={{                                         
-                                          backgroundColor: '#57534E',
-                                          '&:hover': {
-                                          backgroundColor: '#EC4899',
-                                      }, 
-                                      }}
+                                        className="bg-sky-950"
                                         onClick={handleDownload}
                                     >
                                         Download txt
