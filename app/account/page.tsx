@@ -66,7 +66,7 @@ export default async function Account() {
   };
 
   return (
-    <section className="mb-32 bg-black">
+    <section className="mb-32 bg-sky-950">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
         <div className="sm:align-center sm:flex sm:flex-col">
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
@@ -87,7 +87,7 @@ export default async function Account() {
           }
           footer={<ManageSubscriptionButton session={session} />}
         >
-          <div className="mt-8 mb-4 text-xl font-semibold">
+          <div className="text-black mt-8 mb-4 text-xl font-semibold">
             {subscription ? (
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
@@ -118,7 +118,7 @@ export default async function Account() {
               <input
                 type="text"
                 name="name"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                className="w-1/2 p-3 rounded-md bg-pink-600"
                 defaultValue={userDetails?.full_name ?? ''}
                 placeholder="Your name"
                 maxLength={64}
@@ -151,7 +151,7 @@ export default async function Account() {
               <input
                 type="text"
                 name="email"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                className="w-1/2 p-3 rounded-md bg-pink-600"
                 defaultValue={user ? user.email : ''}
                 placeholder="Your email"
                 maxLength={64}
@@ -173,13 +173,13 @@ interface Props {
 
 function Card({ title, description, footer, children }: Props) {
   return (
-    <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
+    <div className="bg-white w-full max-w-3xl m-auto my-8 border rounded-md p border-pink-700">
       <div className="px-5 py-4">
-        <h3 className="mb-1 text-2xl font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
+        <h3 className="text-black mb-1 text-2xl font-medium">{title}</h3>
+        <p className="text-black text-zinc-300">{description}</p>
         {children}
       </div>
-      <div className="p-4 border-t rounded-b-md border-zinc-700 bg-zinc-900 text-zinc-500">
+      <div className="text-black p-4 border-t rounded-b-md border-pink-950 bg-white">
         {footer}
       </div>
     </div>
